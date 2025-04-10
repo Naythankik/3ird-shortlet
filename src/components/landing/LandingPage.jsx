@@ -246,7 +246,7 @@ const LandingPage = () => {
                     <h2 className="text-center w-full text-xl md:text-2xl font-bold leading-tight text-blue-800 uppercase">Our
                         Rooms & Rates</h2>
 
-                    <section className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 px-6 py-4">
+                    <section className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 px-6 py-4" style={{scrollbarWidth: 'none'}}>
                         {apartmentList.map((apartment, index) => (
                             <ArticleSection
                                 key={index}
