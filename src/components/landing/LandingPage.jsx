@@ -13,6 +13,18 @@ import Parking from "../../assets/icons/parking.png"
 import DumbBell from "../../assets/icons/dumbbell.png"
 import {useState} from "react";
 
+function DateInput() {
+    const [date, setDate] = useState("2025-04-10");
+    return (
+        <input
+            className="p-2 rounded-xl w-full focus:outline-none"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+        />
+    );
+}
+
 const amenities = [
     {
         image: WifiIcon,
@@ -205,13 +217,11 @@ const LandingPage = () => {
                             <div className="grid lg:grid-cols-3 gap-2">
                                 <div className="flex flex-col gap-1">
                                     <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Check in</label>
-                                    <input className="p-2 rounded-xl w-full focus:outline-none" type="date"
-                                           value="10-04-2025"/>
+                                    <DateInput />
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Check Out</label>
-                                    <input className="p-2 rounded-xl w-full focus:outline-none" type="date"
-                                           value="10-04-2025"/>
+                                    <DateInput />
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Number of Rooms</label>
