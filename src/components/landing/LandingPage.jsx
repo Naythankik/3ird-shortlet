@@ -136,7 +136,7 @@ const ArticleSection = ({ title, description, price, image}) => {
 const AmenitySection = ({props}) => {
     return (
         <article
-            className="bg-transparent shadow-lg py-5 flex flex-wrap gap-6 text-center justify-center rounded-lg w-96">
+            className="bg-transparent shadow-lg py-5 flex flex-wrap gap-6 text-center justify-center rounded-lg w-full md:w-96">
             <img src={props.image} alt={props.title} className="w-1/6 h-1/6 bg-none flex rounded-t-2xl"/>
             <div className="px-5 py-8 flex flex-col gap-2">
                 <p title={props.title} className="text-blue-500 font-bold text-xl text-wrap capitalize">{props.title}</p>
@@ -202,19 +202,19 @@ const LandingPage = () => {
                             space is designed for your ultimate convenience.
                         </p>
                         <form className="bg-blue-50 py-6 px-5 rounded-xl flex flex-col gap-3">
-                            <div className="grid grid-cols-3 gap-2">
+                            <div className="grid lg:grid-cols-3 gap-2">
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-gray-700 text-lg md:text-xl">Check in</label>
+                                    <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Check in</label>
                                     <input className="p-2 rounded-xl focus:outline-none" type="date"
                                            value="10-04-2025"/>
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-gray-700 text-lg md:text-xl">Check Out</label>
+                                    <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Check Out</label>
                                     <input className="p-2 rounded-xl focus:outline-none" type="date"
                                            value="10-04-2025"/>
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-gray-700 text-lg md:text-xl">Number of Rooms</label>
+                                    <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Number of Rooms</label>
                                     <select className="p-3 bg-white rounded-xl focus:outline-none">
                                         <option selected disabled>Any</option>
                                         <option value="1">1</option>
@@ -251,7 +251,7 @@ const LandingPage = () => {
                 </section>
 
                 <section className="flex flex-col items-center justify-between px-6 md:px-20 py-12 md:py-16 gap-8 md:gap-10">
-                    <h2 className="w-2/5 text-center text-wrap text-xl md:text-2xl font-bold leading-tight text-blue-800 uppercase">
+                    <h2 className="w-3/4 md:w-2/5 text-center text-wrap text-xl md:text-2xl font-bold leading-tight text-blue-800 uppercase">
                         Our The Top Notch Amenities you get when you book today
                     </h2>
                     <section className="flex flex-wrap justify-evenly gap-6 px-6 py-4">
