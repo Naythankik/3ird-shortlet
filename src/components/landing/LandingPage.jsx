@@ -205,12 +205,12 @@ const LandingPage = () => {
                             <div className="grid lg:grid-cols-3 gap-2">
                                 <div className="flex flex-col gap-1">
                                     <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Check in</label>
-                                    <input className="p-2 rounded-xl focus:outline-none" type="date"
+                                    <input className="p-2 rounded-xl w-full focus:outline-none" type="date"
                                            value="10-04-2025"/>
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Check Out</label>
-                                    <input className="p-2 rounded-xl focus:outline-none" type="date"
+                                    <input className="p-2 rounded-xl w-full focus:outline-none" type="date"
                                            value="10-04-2025"/>
                                 </div>
                                 <div className="flex flex-col gap-1">
