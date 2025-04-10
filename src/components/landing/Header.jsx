@@ -16,7 +16,7 @@ const Header = () => {
 
     return (
         <header className="flex sticky top-0 bg-white justify-between px-10 py-7 uppercase">
-            <Link to="/" className="text-xl md:text-2xl font-extrabold text-blue-500 flex items-center gap-2">
+            <Link to="/" className="text-base md:text-2xl font-extrabold text-blue-500 flex items-center gap-2">
                 <FaHome />3ird-shortlet
             </Link>
             <div className="hidden md:flex gap-3 items-center font-medium">
