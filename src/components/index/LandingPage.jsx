@@ -233,10 +233,10 @@ const AmenitySection = ({props}) => {
 
 const LandingPage = () => {
     return (
-        <div>
+        <div className="relative">
             <Header/>
 
-            <div className="bg-gradient-to-r from-blue-50 to-white">
+            <main className="bg-gradient-to-r from-blue-50 to-white">
                 <section
                     className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
 
@@ -397,7 +397,7 @@ const LandingPage = () => {
                         />
                     </div>
                 </section>
-            </div>
+            </main>
 
             <Footer/>
         </div>
