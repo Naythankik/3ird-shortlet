@@ -19,7 +19,7 @@ function DateInput() {
     const [date, setDate] = useState("2025-04-10");
     return (
         <input
-            className="p-2 rounded-xl w-full focus:outline-none"
+            className="p-2 text-sm md:text-base rounded-xl w-full focus:outline-none"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
@@ -177,27 +177,27 @@ const ArticleSection = ({title, description, price, image}) => {
     const [showMore, setShowMore] = useState(false);
 
     return (
-        <article className="bg-red-50 rounded-2xl min-w-96">
+        <article className="bg-red-50 rounded-2xl w-full md:min-w-96">
             <img src={image} alt="title" className="w-full rounded-t-2xl"/>
             <div className="px-5 py-8 flex flex-col gap-2">
-                <p title={title} className="text-blue-500 font-bold text-xl capitalize truncate">
+                <p title={title} className="text-blue-500 font-bold text-base md:text-xl capitalize truncate">
                     {title}
                 </p>
-                <p title={description} className="text-gray-400 text-base">
+                <p title={description} className="text-gray-400 text-sm md:text-base">
                     {showMore ? description : `${description.substring(0, 70)}...`}
                 </p>
                 <button
                     onClick={() => setShowMore(!showMore)}
-                    className="text-blue-500 text-sm mt-2 flex justify-start"
+                    className="text-blue-500 text-xs md:text-sm mt-2 flex justify-start"
                 >
                     {showMore ? 'Show Less' : 'Read More'}
                 </button>
-                <div className="flex gap-1 my-4">
+                <div className="flex gap-1 my-4 text-sm md:text-base">
                     <span title="price" className="text-blue-500 font-semibold">N{price}</span>
                     <span title="nights">/ Per Night</span>
                 </div>
                 <Link to=""
-                      className="text-center py-3 px-6 bg-blue-500 hover:bg-white hover:text-blue-500 text-white border border-blue-500 rounded-lg font-semibold transition duration-300"
+                      className="text-sm md:text-base text-center py-3 px-6 bg-blue-500 hover:bg-white hover:text-blue-500 text-white border border-blue-500 rounded-lg font-semibold transition duration-300"
                 >See details</Link>
             </div>
         </article>
@@ -207,13 +207,13 @@ const ArticleSection = ({title, description, price, image}) => {
 const ReviewSection = ({ name, rating, date, apartment, comment }) => {
     return (
         <article className="p-4 border rounded-lg shadow-sm bg-white min-w-96">
-            <h3 className="text-xl font-semibold text-blue-500">{name}</h3>
+            <h3 className="text-base md:text-xl font-semibold text-blue-500">{name}</h3>
             <div className="flex justify-between items-center mt-2">
-                <span className="text-gray-500">{apartment}</span>
-                <span className="text-yellow-500">{rating} ★</span>
+                <span className="text-sm md:text-base text-gray-500">{apartment}</span>
+                <span className="text-sm md:text-base text-yellow-500">{rating} ★</span>
             </div>
-            <p className="text-sm text-gray-500 mt-1">{date}</p>
-            <i className="text-gray-700 mt-4 flex">"{comment}"</i>
+            <p className="text-xs md:text-sm text-gray-500 mt-1">{date}</p>
+            <i className="text-xs md:text-sm text-gray-700 mt-4 flex">"{comment}"</i>
         </article>
     );
 }
@@ -222,10 +222,10 @@ const AmenitySection = ({props}) => {
     return (
         <article
             className="bg-transparent shadow-lg py-5 flex flex-wrap gap-6 text-center justify-center rounded-lg w-full md:w-96">
-            <img src={props.image} alt={props.title} className="w-1/6 h-1/6 bg-none flex rounded-t-2xl"/>
+            <img src={props.image} alt={props.title} className="w-[20%] md:w-1/6 h-[20%] md:h-1/6 bg-none flex rounded-t-2xl"/>
             <div className="px-5 py-8 flex flex-col gap-2">
-                <p title={props.title} className="text-blue-500 font-bold text-xl text-wrap capitalize">{props.title}</p>
-                <p title={props.description} className="text-gray-400 text-base">{props.description}</p>
+                <p title={props.title} className="text-blue-500 font-bold text-base md:text-xl text-wrap capitalize">{props.title}</p>
+                <p title={props.description} className="text-gray-400 text-sm md:text-base">{props.description}</p>
             </div>
         </article>
     )
@@ -238,13 +238,13 @@ const LandingPage = () => {
 
             <div className="bg-gradient-to-r from-blue-50 to-white">
                 <section
-                    className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-20 py-12 md:py-16 gap-8 md:gap-10">
+                    className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
 
                     <div className="md:w-1/2 text-center md:text-left space-y-6 md:space-y-8">
-                        <h1 className="text-3xl md:text-5xl font-bold leading-tight text-blue-800 uppercase">
+                        <h1 className="text-xl md:text-5xl font-bold leading-tight text-blue-800 uppercase">
                             Premium shortlet apartments in Nigeria at pocket-friendly rates
                         </h1>
-                        <p className="text-gray-700 text-lg md:text-xl">
+                        <p className="text-gray-700 text-base md:text-xl">
                             Discover stylish, fully-furnished shortlet spaces perfect for business trips,
                             vacations, or weekend getaways — available in top Nigerian cities at rates you’ll love.
                         </p>
@@ -266,7 +266,7 @@ const LandingPage = () => {
                     </div>
                 </section>
                 <section
-                    className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-12 md:py-16 gap-8 md:gap-10">
+                    className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
 
                     <div className="md:w-1/2 w-full flex justify-center">
                         <img
@@ -278,10 +278,10 @@ const LandingPage = () => {
                     </div>
 
                     <div className="md:w-1/2 text-center md:text-left space-y-6 md:space-y-8">
-                        <h1 className="text-3xl md:text-5xl font-bold leading-tight text-blue-800 uppercase">
+                        <h1 className="text-xl md:text-5xl font-bold leading-tight text-blue-800 uppercase">
                             Experience comfort and convenience in our premium shortlet apartments
                         </h1>
-                        <p className="text-gray-700 text-lg md:text-xl">
+                        <p className="text-gray-700 text-base md:text-xl">
                             Whether you’re traveling for business or leisure, our apartments offer the perfect
                             combination of comfort, style, and affordability. Located in prime Nigerian cities, each
                             space is designed for your ultimate convenience.
@@ -289,19 +289,19 @@ const LandingPage = () => {
                         <form className="bg-blue-50 py-6 px-5 rounded-xl flex flex-col gap-3">
                             <div className="grid lg:grid-cols-3 gap-2">
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Check
+                                    <label className="text-gray-700 text-sm md:text-lg text-nowrap text-start">Check
                                         in</label>
                                     <DateInput/>
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Check
+                                    <label className="text-gray-700 text-sm md:text-lg text-nowrap text-start">Check
                                         Out</label>
                                     <DateInput/>
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-gray-700 text-base md:text-lg text-nowrap text-start">Number
+                                    <label className="text-gray-700 text-sm md:text-lg text-nowrap text-start">Number
                                         of Rooms</label>
-                                    <select className="p-3 bg-white rounded-xl focus:outline-none">
+                                    <select className="p-3 bg-white rounded-xl text-sm md:text-base  focus:outline-none">
                                         <option selected disabled>Any</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -318,9 +318,10 @@ const LandingPage = () => {
                     </div>
                 </section>
 
-                <section className="flex flex-col justify-between px-6 md:px-20 py-12 md:py-16 gap-8 md:gap-10">
-                    <h2 className="text-center w-full text-xl md:text-2xl font-bold leading-tight text-blue-800 uppercase">Our
-                        Rooms & Rates</h2>
+                <section className="flex flex-col justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
+                    <h2 className="text-center w-full text-lg md:text-2xl font-bold leading-tight text-blue-800 uppercase">
+                        Our Rooms & Rates
+                    </h2>
 
                     <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 px-6 py-4"
                          style={{scrollbarWidth: 'none'}}>
@@ -338,8 +339,8 @@ const LandingPage = () => {
                 </section>
 
                 <section
-                    className="flex flex-col items-center justify-between px-6 md:px-20 py-12 md:py-16 gap-8 md:gap-10">
-                    <h2 className="w-3/4 md:w-2/5 text-center text-wrap text-xl md:text-2xl font-bold leading-tight text-blue-800 uppercase">
+                    className="flex flex-col items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
+                    <h2 className="w-3/4 md:w-2/5 text-center text-wrap text-lg md:text-2xl font-bold leading-tight text-blue-800 uppercase">
                         Our The Top Notch Amenities you get when you book today
                     </h2>
                     <div className="flex flex-wrap justify-evenly gap-6 px-6 py-4">
@@ -352,8 +353,8 @@ const LandingPage = () => {
                 </section>
 
                 <section
-                    className="flex flex-col items-center justify-between px-6 md:px-20 py-12 md:py-16 gap-8 md:gap-10">
-                    <h2 className="w-3/4 md:w-2/5 text-center text-wrap text-xl md:text-2xl font-bold leading-tight text-blue-800 uppercase">
+                    className="flex flex-col items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
+                    <h2 className="w-3/4 md:w-2/5 text-center text-wrap text-lg md:text-2xl font-bold leading-tight text-blue-800 uppercase">
                         Reviews from our previous guests
                     </h2>
 
@@ -374,10 +375,10 @@ const LandingPage = () => {
                 </section>
 
                 <section
-                    className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-12 md:py-16 gap-8 md:gap-10">
+                    className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
 
-                    <div className="md:w-1/2 text-center space-y-6 md:space-y-8">
-                        <h1 className="text-3xl md:text-5xl font-bold leading-tight text-blue-800 uppercase">
+                    <div className="md:w-1/2 text-center space-y-6 md:space-y-8 w-[90%] mx-auto">
+                        <h1 className="text-xl md:tex-3xl lg:text-5xl font-bold leading-tight text-blue-800 uppercase">
                             Frequently Asked Questions
                         </h1>
                         <div className="flex flex-col gap-3">
@@ -387,12 +388,12 @@ const LandingPage = () => {
                         </div>
                     </div>
 
-                    <div className="md:w-1/2 w-full flex justify-center">
+                    <div className="w-full md:w-1/2 flex justify-center">
                         <img
                             src={FAQ}
                             alt="Apartment view"
                             title="FAQ on our shortlets"
-                            className="rounded-2xl shadow-md w-full h-auto md:h-[400px] object-cover"
+                            className="rounded-2xl shadow-md w-full h-auto md:h-[400px] object-contain lg:object-cover"
                         />
                     </div>
                 </section>
