@@ -67,7 +67,7 @@ const Dashboard = () => {
                 }
 
                 return (
-                    <div className="text-blue-500 flex flex-wrap justify-evenly gap-6 max-h-4">
+                    <div className="text-blue-500 flex flex-wrap justify-evenly gap-6">
                         {apartments.length > 0 ? (
                             apartments.map((apartment, index) => (
                                 <ApartmentsArticle key={index} apartment={apartment}/>
