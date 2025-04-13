@@ -23,7 +23,7 @@ function Layout() {
     }
 
     return (
-        <div className="flex min-h-screen bg-blue-50">
+        <div className="flex min-h-screen">
             <Sidebar />
             <main className="flex-1 py-4 px-5">
                 <div className="flex justify-between text-blue-500">

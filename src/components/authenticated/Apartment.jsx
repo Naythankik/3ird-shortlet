@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Image from '../../assets/apartment.webp';
 import {Link} from "react-router-dom";
 import {debounce} from "lodash";
-import spinner from "../authentication/Spinner.jsx";
+import spinner from "../Spinner.jsx";
 
 const Apartment = () => {
     const [apartments, setApartments] = useState([]);
