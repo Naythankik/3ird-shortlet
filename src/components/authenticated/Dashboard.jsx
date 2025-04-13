@@ -28,7 +28,6 @@ const Dashboard = () => {
 
     const ApartmentsArticle = (props) => {
         const { apartment } = props
-        console.log(apartment);
         return (
                 <article id={apartment.id} className="w-full md:w-96 transition-shadow duration-300 flex flex-col items-center justify-between gap-3">
                     <div className="w-full">
