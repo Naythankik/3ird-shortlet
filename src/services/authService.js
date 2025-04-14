@@ -9,6 +9,11 @@ class AuthService {
                 admin
             }} = await axios.post('auth/login', user);
 
+            //Check if the user is an admin, redirect them to the user page later
+            if(admin.role === 'admin'){
+                return false;
+            }
+
             this.saveToken(token);
             this.saveFullName(admin.firstName, admin.lastName)
             return true;

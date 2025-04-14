@@ -5,9 +5,11 @@ import LoginPage from "./components/authentication/LoginPage.jsx";
 import CreatePage from "./components/authentication/CreatePage.jsx";
 import Dashboard from "./components/authenticated/Dashboard.jsx";
 import Layout from "./components/authenticated/Layout.jsx";
-import Apartment from "./components/authenticated/Apartment.jsx";
+import Apartment from "./components/Apartments/Apartment.jsx";
 import Booking from "./components/authenticated/Booking.jsx";
 import authService from "./services/authService.js";
+import NoMatch from "./components/NoMatch.jsx";
+import ApartmentDetails from "./components/Apartments/ApartmentDetails.jsx";
 
 function App() {
     const isAuthenticated = authService.isAuthenticated();
@@ -31,7 +33,10 @@ function App() {
                         <Route index element={<Navigate to="dashboard" />} />
                         <Route path="dashboard" element={<Dashboard />} />
                         <Route path="apartments" element={<Apartment />} />
+                        <Route path="apartment/:apartmentId" element={<ApartmentDetails />} />
                         <Route path="bookings" element={<Booking />} />
+                        <Route path="*" element={<NoMatch />} />
+
                     </Route>
                 )}
 

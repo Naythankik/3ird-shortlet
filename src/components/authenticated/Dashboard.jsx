@@ -10,6 +10,7 @@ const Dashboard = () => {
     const fetchApartments = async () => {
         try {
             const { apartments: data, pagination } = await apartmentService.getApartments();
+
             if (Array.isArray(data)) {
                 setApartments(data);
             } else {
@@ -61,9 +62,9 @@ const Dashboard = () => {
 
                 }
 
-                if (loading) {
+                // if (loading) {
                     return <p>Loading...</p>;
-                }
+                // }
 
                 return (
                     <div className="text-blue-500 flex flex-wrap justify-evenly gap-6">

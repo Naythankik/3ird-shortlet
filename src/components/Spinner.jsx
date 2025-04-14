@@ -3,7 +3,7 @@ class Spinners  {
     apartmentSpinner() {
 
         return (
-            <div className="flex flex-wrap justify-evenly gap-6">
+            <div className="flex flex-wrap justify-evenly gap-6 mt-16">
                 {[...Array(6)].map((_, i) => (
                     <div key={i} className="w-full md:w-96 animate-pulse flex flex-col gap-3">
                         <div className="bg-blue-200 h-56 w-full rounded-lg"/>

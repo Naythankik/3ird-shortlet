@@ -45,6 +45,7 @@ const Booking = () => {
         try {
             setLoading(true);
             const { booking } = await bookingService.getBookings('/bookings/read');
+            return
             setBookings(booking);
         } catch (err) {
             console.log(err.message);

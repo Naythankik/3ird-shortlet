@@ -29,9 +29,15 @@ const LoginPage = () => {
         const user = { email, password };
 
         try{
-            await authService.login(user);
-            window.location.reload();
+            const response = await authService.login(user);
+
+            if(response){
+                window.location.reload();
+            }else{
+                setError('Login failed')
+            }
         }catch(error){
+            console.log(error)
             setError(error.message || 'Login failed.');
         }finally {
             setIsLoading(false);
@@ -44,7 +50,7 @@ const LoginPage = () => {
             <main className="flex flex-col w-[90%] md:w-2/5 mx-auto py-8 gap-4">
                 <form onSubmit={doLogin} method='post'>
                     <fieldset className="w-full shadow-2xl p-9 rounded-md flex flex-col gap-5 text-blue-500">
-                        <span className="text-red-400 text-sm italic text-center">{error}</span>
+                        <span className="text-red-400 text-sm italic text-center capitalize">{error}</span>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="email" className="text-base md:text-lg">Email</label>
                             <input name="email"
