@@ -93,7 +93,6 @@ const ApartmentDetails = () => {
                         )}
                     </div>
 
-
                 </div>
             )}
         </div>
