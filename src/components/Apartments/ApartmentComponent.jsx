@@ -5,14 +5,12 @@ const ApartmentComponent = (props) => {
         const { apartment } = props
         return (
             <article id={apartment.id} className="w-full md:w-96 transition-shadow duration-300 flex flex-col items-center justify-between gap-3">
-                <div className="w-full">
-                    {Array.isArray(apartment.image) && apartment.image.length > 0 ? (
-                        apartment.image.map((image, index) => (
-                            <img key={index} className="w-full" src={Image} alt={apartment.name}/>
+                <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 w-full mb-3"
+                     style={{scrollBehavior: 'smooth', scrollbarWidth: 'none'}}>
+                    {apartment.images.map((image, index) => (
+                        <img key={index} className="h-40 rounded-lg object-cover min-w-full" src={image} alt={apartment.name}/>
                         ))
-                    ) : (
-                        <img key={apartment.id} className="w-full" src={Image} alt={apartment.name}/>
-                    )}
+                    }
                 </div>
                 <div className="flex gap-2 flex-col">
                     <Link to={`/apartment/${apartment.id}`} className="text-lg"

@@ -2,6 +2,7 @@ import {Link, useParams} from "react-router-dom";
 import { useEffect, useState } from "react";
 import apartmentService from "../../services/apartmentService.js";
 import spinner from "../Spinner.jsx";
+import {FaStar} from "react-icons/fa";
 
 const ApartmentDetails = () => {
     const { apartmentId } = useParams();
@@ -38,16 +39,16 @@ const ApartmentDetails = () => {
 
             {apartment && (
                 <div className="bg-white p-6 shadow-md rounded-lg max-w-5xl mx-auto mt-6">
-                    <div className="full flex flex-nowrap overflow-x-scroll justify-evenly gap-6 w-full mb-3"
+                    <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 w-full mb-3"
                          style={{scrollBehavior: 'smooth', scrollbarWidth: 'none'}}>
                         {apartment.images?.map((image, i) => (
-                            <img key={i} src={image.url} alt={image.name}
-                                 className="h-96 rounded-lg object-cover min-w-full"/>
+                                <img key={i} src={image} alt={image.name}
+                                     className="h-96 rounded-lg object-cover min-w-full" />
                         ))}
                     </div>
 
                     <div className="flex justify-between items-center text-blue-500">
-                        <h1 className="text-2xl font-bold mb-2">{apartment.name}</h1>
+                    <h1 className="text-2xl font-bold mb-2">{apartment.name}</h1>
                         <Link to={`/apartments/${apartmentId}`}
                               className="border-blue-500 border-2 py-2 px-6 rounded-lg">Book apartment</Link>
                     </div>
@@ -93,6 +94,28 @@ const ApartmentDetails = () => {
                         )}
                     </div>
 
+                    {apartment.reviews.length > 0 &&
+                    <div className="bg-transparent">
+                        <p className="text-lg font-semibold mb-2">Reviews from other users</p>
+                            <div className="flex flex-col gap-4">
+                                {apartment?.reviews?.map((review, i) => (
+                                    <article className="shadow-2xl p-4" key={i}>
+                                        <div className="flex justify-between">
+                                            <div>
+                                                <p>{`${review.user.firstName} ${review.user.lastName}`}</p>
+                                                <span className="flex gap-2 items-center">{review.rating}
+                                                    <FaStar/></span>
+                                            </div>
+                                            <img className="w-[40px] h-[40px] rounded-full" src={review.user.profilePicture} alt={review.user.firstName} />
+                                        </div>
+                                        <span>Was this helpful?</span>
+                                        <span>{review.comment}</span>
+
+                                    </article>
+                                ))}
+                            </div>
+                    </div>
+                    }
                 </div>
             )}
         </div>
