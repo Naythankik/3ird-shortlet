@@ -65,7 +65,7 @@ const LoginPage = () => {
                                    onChange={(e) => setPassword(e.target.value)}
                                    className="border-2 border-blue-500 focus-visible:outline-blue-500 rounded-lg px-3 py-2"
                                    id="password" type="password" placeholder="Enter your password"/>
-                            <div className="flex flex-wrap -mt-2 items-center justify-between text-sm">
+                            <div className="flex flex-wrap items-center justify-between text-sm mt-3">
                                 <div className="flex gap-1">
                                     <input
                                         type="checkbox"

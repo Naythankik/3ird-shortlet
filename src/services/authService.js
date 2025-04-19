@@ -24,8 +24,8 @@ class AuthService {
 
     async register(user) {
         try {
-            const response = await axios.post('auth/register', user);
-            return response.data;
+            await axios.post('auth/register', user);
+            return true
         } catch (error) {
             throw error.response?.data || error;
         }
