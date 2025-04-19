@@ -104,10 +104,10 @@ const LoginPage = () => {
                                 <input name="dateOfBirth"
                                        value={dateOfBirth}
                                        onChange={(e) => setDateOfBirth(e.target.value)}
-                                       className="border-2 border-blue-500 focus-visible:outline-blue-500 rounded-lg px-3 py-2"
+                                       className="border-2 border-blue-500 focus-visible:outline-blue-500 rounded-lg px-3 py-2 w-full"
                                        id="dateOfBirth" type="date"/>
                             </div>
-                        </div>
+                        </div>x
 
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-[1fr_1fr]">
                             <div className="flex flex-col gap-2">
