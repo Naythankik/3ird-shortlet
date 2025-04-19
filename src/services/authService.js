@@ -31,6 +31,24 @@ class AuthService {
         }
     }
 
+    async requestPasswordReset(user) {
+        try {
+           await axios.post('auth/forget-password', user);
+            return true;
+        } catch (error) {
+            throw error.response?.data || error;
+        }
+    }
+
+    async resetPassword(body){
+        try {
+           await axios.post('auth/reset-password', body);
+           return true;
+        } catch (error) {
+            throw error.response?.data || error;
+        }
+    }
+
     logout() {
         localStorage.clear()
     }
