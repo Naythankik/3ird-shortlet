@@ -4,22 +4,15 @@ import { Link } from "react-router-dom";
 import DummyApartment from "../../assets/apartment.webp";
 import StudioApartment from "../../assets/Studio_apartment.webp";
 import ArticleApartment from "../../assets/article.jpg";
-import WifiIcon from "../../assets/icons/wifi.png";
-import AC from "../../assets/icons/ac.png";
-import Swimmer from "../../assets/icons/swimmer.png";
-import TV from "../../assets/icons/tv.png";
-import CockTail from "../../assets/icons/cocktail.png"
-import Parking from "../../assets/icons/parking.png"
-import DumbBell from "../../assets/icons/dumbbell.png"
 import FAQ from "../../assets/faq.webp";
 import {useState} from "react";
 import {FaCaretDown, FaCaretUp} from "react-icons/fa";
-
+import { Wifi, Thermometer, Waves, Dumbbell, ParkingCircle, Utensils, Tv } from "lucide-react";
 function DateInput() {
     const [date, setDate] = useState("2025-04-10");
     return (
         <input
-            className="p-2 text-sm md:text-base rounded-xl w-full focus:outline-none"
+            className="p-2 text-sm md:text-base rounded-xl min-w-full focus:outline-none"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
@@ -29,40 +22,40 @@ function DateInput() {
 
 const amenities = [
     {
-        image: WifiIcon,
+        icon: <Wifi className="w-8 h-8 text-blue-600" />,
         title: 'Superfast Wi-Fi speed',
-        description: 'Enjoy blazing fast internet with no interruptions. Our high-speed Wi-Fi network ensures that you can stream videos, video call, work remotely, and stay connected with ease, whether you’re in your room or relaxing in the lounge.'
+        description: 'Enjoy blazing fast internet with no interruptions...',
     },
     {
-        image:  AC,
+        icon: <Thermometer className="w-8 h-8 text-blue-600" />,
         title: 'Air Conditioning',
-        description: 'Stay cool and comfortable in all rooms. Our air conditioning units are designed to provide the perfect indoor temperature, allowing you to unwind after a long day of exploring or working. You can adjust the settings for ultimate comfort.'
+        description: 'Stay cool and comfortable in all rooms...',
     },
     {
-        image: Swimmer,
+        icon: <Waves className="w-8 h-8 text-blue-600" />,
         title: 'Swimming Pool',
-        description: 'Relax and unwind in the beautiful outdoor pool. Our pool is perfect for a refreshing dip on a hot day, or for lounging by the water with a cold drink. Whether you\'re swimming laps or just soaking up the sun, it’s an experience you’ll cherish.'
+        description: 'Relax and unwind in the beautiful outdoor pool...',
     },
     {
-        image: DumbBell,
+        icon: <Dumbbell className="w-8 h-8 text-blue-600" />,
         title: 'Gym Facilities',
-        description: 'Access a fully equipped gym during your stay. Our state-of-the-art gym includes a range of cardio machines, free weights, and resistance equipment, ensuring you can keep up with your fitness routine, no matter how long your stay is.'
+        description: 'Access a fully equipped gym during your stay...',
     },
     {
-        image: Parking,
+        icon: <ParkingCircle className="w-8 h-8 text-blue-600" />,
         title: 'Free Parking',
-        description: 'Secure and free parking available for guests. We offer plenty of parking space, so you never have to worry about finding a spot. Whether you’re traveling by car or with friends, our parking facilities are safe and convenient.'
+        description: 'Secure and free parking available for guests...',
     },
     {
-        image: CockTail,
+        icon: <Utensils className="w-8 h-8 text-blue-600" />,
         title: 'Fully Equipped Kitchen',
-        description: 'Cook your favorite meals with top-of-the-line appliances. Our kitchens are equipped with modern stoves, microwaves, refrigerators, and all the utensils you’ll need to prepare a delicious home-cooked meal. It’s perfect for guests who want to enjoy a meal in privacy or host a gathering.'
+        description: 'Cook your favorite meals with top-of-the-line appliances...',
     },
     {
-        image: TV,
+        icon: <Tv className="w-8 h-8 text-blue-600" />,
         title: 'Flat Screen TV',
-        description: 'Enjoy your favorite shows and movies on a large TV. Each apartment comes with a flat-screen TV, offering access to various cable channels and streaming platforms, so you can unwind and entertain yourself with ease. Ideal for movie nights or catching up on the latest shows.'
-    }
+        description: 'Enjoy your favorite shows and movies on a large TV...',
+    },
 ];
 
 const apartmentList = [
@@ -222,7 +215,7 @@ const AmenitySection = ({props}) => {
     return (
         <article
             className="bg-transparent shadow-lg py-5 flex flex-wrap gap-6 text-center justify-center rounded-lg w-full md:w-96">
-            <img src={props.image} alt={props.title} className="w-[20%] md:w-1/6 h-[20%] md:h-1/6 bg-none flex rounded-t-2xl"/>
+            <div className="mb-4">{props.icon}</div>
             <div className="px-5 py-8 flex flex-col gap-2">
                 <p title={props.title} className="text-blue-500 font-bold text-base md:text-xl text-wrap capitalize">{props.title}</p>
                 <p title={props.description} className="text-gray-400 text-sm md:text-base">{props.description}</p>
