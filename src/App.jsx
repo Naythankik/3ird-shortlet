@@ -34,6 +34,7 @@ import ServicePages from "./components/index/ServicesPage.jsx";
 import PricingPage from "./components/index/PricingPage.jsx";
 import ForgetPasswordPage from "./components/authentication/ForgetPasswordPage.jsx";
 import ResetPasswordPage from "./components/authentication/ResetPasswordPage.jsx";
+import VerifyAccountPage from "./components/authentication/VerifyAccountPage.jsx";
 
 function ErrorBoundary() {
     const error = useRouteError();
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <AuthGuard element={<LoginPage />} requiresAuth={false} />
+    },
+    {
+        path: "/account/verification/:token",
+        element: <AuthGuard element={<VerifyAccountPage />} requiresAuth={false} />
     },
     {
         path: "/forget-password",

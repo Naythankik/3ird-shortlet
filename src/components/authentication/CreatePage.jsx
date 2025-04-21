@@ -8,6 +8,7 @@ import spinner from "../Spinner.jsx";
 const LoginPage = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [email, setEmail] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -42,8 +43,13 @@ const LoginPage = () => {
         try{
             const response = await authService.register(user);
 
-            if(response){
-               navigate('/login')
+            if(response.status === 200){
+                setSuccess(response.data.message || 'Registration successful. Redirecting to login page.');
+
+                //Redirect the registered user after 5 seconds.
+               setTimeout(() => {
+                   navigate('/login')
+               }, 5000)
             }else{
                 setError('Registration failed')
             }
@@ -62,6 +68,7 @@ const LoginPage = () => {
                 <form onSubmit={doRegister} method='post'>
                     <fieldset className="w-full shadow-2xl p-9 rounded-md flex flex-col gap-5 text-blue-500">
                         <span className="text-red-400 text-sm italic text-center capitalize">{error}</span>
+                        <span className="text-green-700 text-sm italic text-center capitalize">{success}</span>
                         {/*The default for responsive */}
                         <div className="grid grid-cols-1 gap-5 md:grid-cols-[1fr_1fr]">
                             <div className="flex flex-col gap-2">

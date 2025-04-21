@@ -25,7 +25,7 @@ const ForgetPasswordPage = () => {
         }
 
         try {
-            const response = await authService.requestPasswordReset({ email });
+            const response = await authService.forgetPassword({ email });
 
             if (response) {
                 setSuccessMessage('If the email exists, a password reset link has been sent.');

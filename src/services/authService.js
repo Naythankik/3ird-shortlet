@@ -24,14 +24,22 @@ class AuthService {
 
     async register(user) {
         try {
-            await axios.post('auth/register', user);
-            return true
+            const { data, status } = await axios.post('auth/register', user);
+            return { data, status };
         } catch (error) {
             throw error.response?.data || error;
         }
     }
 
-    async requestPasswordReset(user) {
+    async verifyAccount(token, otp) {
+        try {
+            return await axios.post(`auth/verify-account/${token}`, {otp})
+        } catch (error) {
+            throw error.response?.data || error;
+        }
+    }
+
+    async forgetPassword(user) {
         try {
            await axios.post('auth/forget-password', user);
             return true;
