@@ -33,7 +33,16 @@ class AuthService {
 
     async verifyAccount(token, otp) {
         try {
-            return await axios.post(`auth/verify-account/${token}`, {otp})
+            const { data, status } = await axios.post(`auth/verify-account/${token}`, {otp})
+            return { data, status };
+        } catch (error) {
+            return error.response || error;
+        }
+    }
+
+    async requestVerification(token) {
+        try {
+            return await axios.post(`auth/request-verification/${token}`)
         } catch (error) {
             throw error.response?.data || error;
         }

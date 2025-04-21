@@ -1,6 +1,6 @@
 import Header from "../index/Header.jsx";
 import spinner from "../Spinner.jsx";
-import { useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Footer from "../index/Footer.jsx";
 import {useState} from "react";
 import authService from "../../services/authService.js";
@@ -12,6 +12,7 @@ const VerifyAccountPage = () => {
     const [otp, setOtp] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { token } = useParams();
+    const [isRequestVerification, setIsRequestVerification] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,14 +20,37 @@ const VerifyAccountPage = () => {
 
         try{
             const response = await authService.verifyAccount(token, otp);
-            console.log(response)
-            return
+
+            if(response.status === 498){
+                setIsRequestVerification(true);
+            }
 
             if(response.status === 200){
                 setSuccess(response.data.message || 'Account verification successful. Redirecting to login page.');
                 setTimeout(() => {
                     navigate('/login');
-                }, 5000)
+                }, 2000)
+            }
+        }catch (e){
+            setError(e.message || 'An error occurred. Please try again.');
+        }finally {
+            setIsLoading(false);
+        }
+    }
+
+    const handleReverification = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError('');
+
+        try{
+            const response = await authService.requestVerification(token);
+            if(response.status === 200){
+                setSuccess(response.data.message);
+                setIsRequestVerification(false);
+                setTimeout(() => {
+                    navigate('/home');
+                }, 2000)
             }
         }catch (e){
             setError(e.message || 'An error occurred. Please try again.');
@@ -54,7 +78,15 @@ const VerifyAccountPage = () => {
                                 type="text"
                                 placeholder="Enter OTP sent to your email address"
                             />
+                            {isRequestVerification &&
+                                <button
+                                    onClick={handleReverification}
+                                    className="underline"
+                                >
+                                    Request reverification
+                                </button>}
                         </div>
+
                         <div className="flex flex-col gap-2">
                             {
                                 isLoading ? spinner.buttonSpinner('Verifying OTP...') :

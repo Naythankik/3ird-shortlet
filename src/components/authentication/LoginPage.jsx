@@ -37,7 +37,6 @@ const LoginPage = () => {
                 setError('Login failed')
             }
         }catch(error){
-            console.log(error)
             setError(error.message || 'Login failed.');
         }finally {
             setIsLoading(false);
