@@ -4,14 +4,14 @@ import ContactPage from "./components/index/ContactPage.jsx";
 import LoginPage from "./components/authentication/LoginPage.jsx";
 import CreatePage from "./components/authentication/CreatePage.jsx";
 import Layout from "./components/authenticated/Layout.jsx";
-import Booking from "./components/authenticated/Booking.jsx";
+import Booking from "./components/authenticated/Bookings/Booking.jsx";
 import authService from "./services/authService.js";
 import NoMatch from "./components/NoMatch.jsx";
 import { lazy, Suspense } from "react";
 
 const Dashboard = lazy(() => import('./components/authenticated/Dashboard'));
-const Apartment = lazy(() => import('./components/Apartments/Apartment'));
-const ApartmentDetails = lazy(() => import('./components/Apartments/ApartmentDetails'));
+const Apartment = lazy(() => import('./components/authenticated/Apartments/Apartment'));
+const ApartmentDetails = lazy(() => import('./components/authenticated/Apartments/ApartmentDetails'));
 
 function AuthGuard({ element, requiresAuth }) {
     const isAuthenticated = authService.isAuthenticated();
@@ -35,6 +35,7 @@ import PricingPage from "./components/index/PricingPage.jsx";
 import ForgetPasswordPage from "./components/authentication/ForgetPasswordPage.jsx";
 import ResetPasswordPage from "./components/authentication/ResetPasswordPage.jsx";
 import VerifyAccountPage from "./components/authentication/VerifyAccountPage.jsx";
+import BookApartment from "./components/authenticated/Bookings/BookApartment.jsx";
 
 function ErrorBoundary() {
     const error = useRouteError();
@@ -125,6 +126,10 @@ const router = createBrowserRouter([
             {
                 path: 'apartment/:apartmentId',
                 element: <ApartmentDetails />
+            },
+            {
+                path: 'apartment/:apartmentId/book/:name',
+                element: <BookApartment />
             },
             {
                 path: 'bookings',

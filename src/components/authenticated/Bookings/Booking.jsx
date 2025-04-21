@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import bookingService from "../../services/bookingService.js";
-import spinner from "../Spinner.jsx";
+import bookingService from "../../../services/bookingService.js";
+import spinner from "../../Spinner.jsx";
 import {Link} from "react-router-dom";
 
 const Booking = () => {

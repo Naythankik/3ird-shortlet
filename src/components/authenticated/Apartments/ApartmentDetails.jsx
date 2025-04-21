@@ -1,7 +1,7 @@
 import {Link, useParams} from "react-router-dom";
 import { useEffect, useState } from "react";
-import apartmentService from "../../services/apartmentService.js";
-import spinner from "../Spinner.jsx";
+import apartmentService from "../../../services/apartmentService.js";
+import spinner from "../../Spinner.jsx";
 import {FaStar} from "react-icons/fa";
 
 const ApartmentDetails = () => {
@@ -14,7 +14,6 @@ const ApartmentDetails = () => {
         try {
             setLoading(true);
             const { apartment: data } = await apartmentService.getAnApartment(id);
-            console.log(data);
             setApartment(data);
         } catch (err) {
             console.log(err);
@@ -49,7 +48,7 @@ const ApartmentDetails = () => {
 
                     <div className="flex justify-between items-center text-blue-500">
                     <h1 className="text-2xl font-bold mb-2">{apartment.name}</h1>
-                        <Link to={`/apartments/${apartmentId}`}
+                        <Link to={`/apartment/${apartmentId}/book/${apartment.name}`}
                               className="border-blue-500 border-2 py-2 px-6 rounded-lg">Book apartment</Link>
                     </div>
 

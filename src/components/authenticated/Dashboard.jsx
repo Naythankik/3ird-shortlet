@@ -1,7 +1,7 @@
 import apartmentService from "../../services/apartmentService.js";
 import { useState, useEffect } from "react";
 import spinner from "../Spinner.jsx";
-import ApartmentComponent from "../Apartments/ApartmentComponent.jsx";
+import ApartmentComponent from "./Apartments/ApartmentComponent.jsx";
 
 const Dashboard = () => {
     const [apartments, setApartments] = useState([]);
