@@ -1,11 +1,8 @@
-import Footer from "./Footer.jsx";
-import Header from "./Header.jsx";
 import ApartmentImage from "../../assets/apartment.webp";
 
 const AboutPage = () => {
     return (
         <>
-            <Header />
             <main className="bg-gray-50 text-gray-800">
                 {/* Hero Section */}
                 <section className="bg-blue-100 py-16 px-4 sm:px-6 lg:px-8 text-center">
@@ -96,7 +93,6 @@ const AboutPage = () => {
                     </a>
                 </section>
             </main>
-            <Footer />
         </>
     );
 };

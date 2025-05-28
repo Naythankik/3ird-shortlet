@@ -1,17 +1,21 @@
 import axios from '../api/axios';
-import authService from "./authService.js";
 
 class BookingService {
+    async createBooking(url, form) {
+        try{
+            const { data } = await axios.post(url, form);
+            return data;
+        }catch(err){
+            throw err.response?.data || err;
+        }
+    }
+
     async getBookings(url) {
         try{
             const { data } = await axios.get(url);
             return data;
         }catch(err){
-            if(err.status === 401){
-                authService.logout()
-                window.location.reload();
-            }
-            throw new Error(err.message);
+            throw err.response?.data || err;
         }
     }
 
@@ -21,11 +25,7 @@ class BookingService {
             const { data } = await axios.get(url);
             return data;
         }catch(err){
-            if(err.status === 401){
-                authService.logout()
-                window.location.reload();
-            }
-            throw new Error(err.message);
+            throw err.response?.data || err;
         }
     }
 }

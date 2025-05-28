@@ -1,6 +1,6 @@
 import apartmentService from "../../../services/apartmentService.js";
 import { useState, useEffect } from "react";
-import {debounce} from "lodash";
+import { debounce } from "lodash";
 import spinner from "../../Spinner.jsx";
 import ApartmentComponent from "./ApartmentComponent.jsx";
 
@@ -33,6 +33,7 @@ const Apartment = () => {
             const { apartments: data, pagination } = await apartmentService.getApartments(url);
 
             setApartments(data);
+            setError(null)
             setPagination(pagination);
         } catch (err) {
             setError(err.message || 'Failed to fetch apartments');

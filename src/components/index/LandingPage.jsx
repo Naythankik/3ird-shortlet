@@ -1,13 +1,12 @@
-import Header from "./Header.jsx";
-import Footer from "./Footer.jsx";
 import { Link } from "react-router-dom";
 import DummyApartment from "../../assets/apartment.webp";
 import StudioApartment from "../../assets/Studio_apartment.webp";
 import ArticleApartment from "../../assets/article.jpg";
 import FAQ from "../../assets/faq.webp";
-import {useState} from "react";
-import {FaCaretDown, FaCaretUp} from "react-icons/fa";
+import { useState } from "react";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { Wifi, Thermometer, Waves, Dumbbell, ParkingCircle, Utensils, Tv } from "lucide-react";
+
 function DateInput() {
     const [date, setDate] = useState("2025-04-10");
     return (
@@ -226,10 +225,7 @@ const AmenitySection = ({props}) => {
 
 const LandingPage = () => {
     return (
-        <div className="relative">
-            <Header/>
-
-            <main className="bg-gradient-to-r from-blue-50 to-white">
+        <main className="bg-gradient-to-r from-blue-50 to-white">
                 <section
                     className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
 
@@ -391,9 +387,6 @@ const LandingPage = () => {
                     </div>
                 </section>
             </main>
-
-            <Footer/>
-        </div>
     );
 };
 

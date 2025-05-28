@@ -1,151 +1,140 @@
-import { Navigate, createBrowserRouter, RouterProvider } from 'react-router-dom';
-import LandingPage from './components/index/LandingPage.jsx';
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import AboutPage from "./components/index/AboutPage.jsx";
+import BlogsPage from "./components/index/BlogsPage.jsx";
 import ContactPage from "./components/index/ContactPage.jsx";
+import PricingPage from "./components/index/PricingPage.jsx";
+import ServicePages from "./components/index/ServicesPage.jsx";
+import LandingPage from "./components/index/LandingPage.jsx";
 import LoginPage from "./components/authentication/LoginPage.jsx";
 import CreatePage from "./components/authentication/CreatePage.jsx";
+import ForgetPasswordPage from "./components/authentication/ForgetPasswordPage.jsx";
+import ResetPasswordPage from "./components/authentication/ResetPasswordPage.jsx";
+import Dashboard from "./components/authenticated/Dashboard.jsx";
 import Layout from "./components/authenticated/Layout.jsx";
-import Booking from "./components/authenticated/Bookings/Booking.jsx";
-import authService from "./services/authService.js";
+import PublicLayout from "./components/PublicLayout.jsx";
 import NoMatch from "./components/NoMatch.jsx";
-import { lazy, Suspense } from "react";
 
-const Dashboard = lazy(() => import('./components/authenticated/Dashboard'));
-const Apartment = lazy(() => import('./components/authenticated/Apartments/Apartment'));
-const ApartmentDetails = lazy(() => import('./components/authenticated/Apartments/ApartmentDetails'));
+import AuthService from "./services/authService.js";
+import VerifyAccountPage from "./components/authentication/VerifyAccountPage.jsx";
+import { useEffect, useState } from "react";
+import Apartment from "./components/authenticated/Apartments/Apartment.jsx";
+import ApartmentDetails from "./components/authenticated/Apartments/ApartmentDetails.jsx";
+import BookApartment from "./components/authenticated/Bookings/BookApartment.jsx";
+import Booking from "./components/authenticated/Bookings/Booking.jsx";
 
-function AuthGuard({ element, requiresAuth }) {
-    const isAuthenticated = authService.isAuthenticated();
+const AuthGuard = ({ element, isAuthRequired }) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isAuth, setIsAuth] = useState(false);
 
-    if (requiresAuth && !isAuthenticated) {
-        return <Navigate to="/login" replace />;
+    useEffect(() => {
+        const checkAuth = () => {
+            const authenticated = AuthService.isAuthenticated();
+            setIsAuth(authenticated);
+            setIsLoading(false);
+        };
+
+        checkAuth();
+    }, []);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
     }
 
-    if (!requiresAuth && isAuthenticated) {
-        return <Navigate to="/dashboard" replace />;
+    if (isAuth && !isAuthRequired) {
+        return <Navigate to='/dashboard' replace />;
+    }
+
+    if (!isAuth && isAuthRequired) {
+        return <Navigate to='/login' replace />;
     }
 
     return element;
-}
+};
 
-import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
-import AboutPage from "./components/index/AboutPage.jsx";
-import BlogsPage from "./components/index/BlogsPage.jsx";
-import ServicePages from "./components/index/ServicesPage.jsx";
-import PricingPage from "./components/index/PricingPage.jsx";
-import ForgetPasswordPage from "./components/authentication/ForgetPasswordPage.jsx";
-import ResetPasswordPage from "./components/authentication/ResetPasswordPage.jsx";
-import VerifyAccountPage from "./components/authentication/VerifyAccountPage.jsx";
-import BookApartment from "./components/authenticated/Bookings/BookApartment.jsx";
-
-function ErrorBoundary() {
-    const error = useRouteError();
-
-    if (isRouteErrorResponse(error)) {
-        return (
-            <div>
-                <h1>{error.status}</h1>
-                <h2>{error.statusText}</h2>
-                <p>{error.data}</p>
-            </div>
-        );
-    }
-
-    return <div>Something went wrong</div>;
-}
-
-function LazyComponent({ component: Component }) {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <Component />
-        </Suspense>
-    );
-}
-
-const router = createBrowserRouter([
+const routes = createBrowserRouter([
     {
-        path: "/about",
-        element: <AuthGuard element={<AboutPage />} requiresAuth={false} />
-    },
-    {
-        path: "/blogs",
-        element: <AuthGuard element={<BlogsPage />} requiresAuth={false} />
-    },
-    {
-        path: '/contact',
-        element: <ContactPage />
-    },
-    {
-        path: '/home',
-        element: <LandingPage />
-    },
-    {
-        path: '/pricing',
-        element: <PricingPage />
-    },
-    {
-        path: "/login",
-        element: <AuthGuard element={<LoginPage />} requiresAuth={false} />
-    },
-    {
-        path: "/account/verification/:token",
-        element: <AuthGuard element={<VerifyAccountPage />} requiresAuth={false} />
-    },
-    {
-        path: "/forget-password",
-        element: <AuthGuard element={<ForgetPasswordPage />} requiresAuth={false} />
-    },
-    {
-        path: "/forget-password/:token",
-        element: <AuthGuard element={<ResetPasswordPage />} requiresAuth={false} />
-    },
-    {
-        path: "/services",
-        element: <AuthGuard element={<ServicePages />} requiresAuth={false} />
-    },
-    {
-        path: "/register",
-        element: <AuthGuard element={<CreatePage />} requiresAuth={false} />
-    },
-    {
-        path: '/',
-        element: <AuthGuard element={<Layout />} requiresAuth={true} />,
-        errorElement: <ErrorBoundary />,
+        element: <PublicLayout />,
         children: [
             {
-                index: true,
-                element: <Navigate to="dashboard" />
+                path: "/",
+                element: <LandingPage />
             },
             {
-                path: 'dashboard',
-                element: <LazyComponent component={Dashboard} />
+                path: '/about',
+                element: <AboutPage />
             },
             {
-                path: 'apartments',
-                element: <Apartment />
+                path: '/blogs',
+                element: <BlogsPage />
             },
             {
-                path: 'apartment/:apartmentId',
-                element: <ApartmentDetails />
+                path: '/contact',
+                element: <ContactPage />
             },
             {
-                path: 'apartment/:apartmentId/book/:name',
-                element: <BookApartment />
+                path: '/pricing',
+                element: <PricingPage />
             },
             {
-                path: 'bookings',
-                element: <Booking />
+                path: '/services',
+                element: <ServicePages />
             },
             {
-                path: '*',
-                element: <NoMatch />
-            }
+                path: '/login',
+                element: <AuthGuard element={<LoginPage />} isAuthRequired={false} />
+            },
+            {
+                path: '/register',
+                element: <AuthGuard element={<CreatePage />} isAuthRequired={false} />
+            },
+            {
+                path: 'verify-email/:token',
+                element: <AuthGuard element={<VerifyAccountPage />} isAuthRequired={false} />
+            },
+            {
+                path: '/forget-password',
+                element: <AuthGuard element={<ForgetPasswordPage />} isAuthRequired={false} />
+            },
+            {
+                path: '/reset-password/:token',
+                element: <AuthGuard element={<ResetPasswordPage />} isAuthRequired={false} />
+            },
         ]
+    },
+    {
+        element: <Layout />,
+        children: [
+            {
+                path: '/dashboard',
+                element: <AuthGuard element={<Dashboard />} isAuthRequired={true} />
+            },
+            {
+                path: '/apartments',
+                element: <AuthGuard element={<Apartment />} isAuthRequired={true} />
+            },
+            {
+                path: '/bookings',
+                element: <AuthGuard element={<Booking />} isAuthRequired={true} />
+            },
+            {
+                path: '/apartment/:apartmentId',
+                element: <AuthGuard element={<ApartmentDetails />} isAuthRequired={true} />
+            },
+            {
+                path: '/apartment/:apartmentId/book/:name',
+                element: <AuthGuard element={<BookApartment />} isAuthRequired={true} />
+            },
+        ]
+    },
+    {
+        path: '*',
+        element: <NoMatch />
     }
-])
+    ]
+);
 
-function App(){
-    return <RouterProvider router={router} />
+const App = () => {
+    return <RouterProvider router={ routes } />
 }
-
 
 export default App;

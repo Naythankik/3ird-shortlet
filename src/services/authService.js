@@ -1,42 +1,94 @@
 import axios from '../api/axios';
 
 class AuthService {
+    /**
+     * Handle API errors
+     * @param error
+     */
+    handleApiError(error) {
+        const errorData = error.response?.data || error;
+        const errorMessage = errorData.message || 'An unexpected error occurred';
+
+        if (error.response?.status === 401) {
+            this.logout();
+        }
+
+        throw {
+            message: errorMessage,
+            status: error.response?.status,
+            data: errorData
+        };
+    }
+
+    /**
+     * Log in user and save token to local storage
+     *
+     * @param user
+     * @returns {Promise<boolean>}
+     */
     async login(user) {
-
         try {
-            const { data: {
+            const { data : {
                 access_token: token,
-                admin
-            }} = await axios.post('auth/login', user);
+                user: profile
+            } } = await axios.post('auth/login', user);
 
-            //Check if the user is an admin, redirect them to the user page later
-            if(admin.role === 'admin'){
-                return false;
+            // Check if the user is an admin, redirect them to the user page later
+            if(profile.role === 'admin') return false;
+
+            if (user.rememberMe) {
+                localStorage.setItem('rememberMe', 'true');
             }
 
-            this.saveToken(token);
-            this.saveFullName(admin.firstName, admin.lastName)
+            this.setToken(token);
+            this.saveFullName(profile.firstName, profile.lastName)
+
             return true;
         } catch (error) {
-            throw error.response?.data || error;
+            throw this.handleApiError(error);
         }
     }
 
+    /**
+     * Register user and save token to local storage
+     *
+     * @param user
+     * @returns {Promise<{data: any, status: number}>}
+     */
     async register(user) {
         try {
             const { data, status } = await axios.post('auth/register', user);
             return { data, status };
         } catch (error) {
-            throw error.response?.data || error;
+            throw this.handleApiError(error);
         }
     }
 
     async verifyAccount(token, otp) {
         try {
-            const { data, status } = await axios.post(`auth/verify-account/${token}`, {otp})
+            const { data, status } = await axios.post(`auth/verify/${token}`, {otp})
             return { data, status };
         } catch (error) {
-            return error.response || error;
+            throw this.handleApiError(error);
+        }
+    }
+
+    async refreshToken() {
+        try {
+            const { data: { access_token } } =
+                await axios.post('auth/refresh-token');
+            this.setToken(access_token);
+            return access_token;
+        } catch (error) {
+            this.logout();
+            throw error;
+        }
+    }
+
+    async ensureValidToken() {
+        const expiration = localStorage.getItem('tokenExpiration');
+        if (expiration && Date.now() >= (parseInt(expiration) - 60000)) { // 1 minute before expiration
+            await this.refreshToken();
         }
     }
 
@@ -44,7 +96,7 @@ class AuthService {
         try {
             return await axios.post(`auth/request-verification/${token}`)
         } catch (error) {
-            throw error.response?.data || error;
+            throw this.handleApiError(error)
         }
     }
 
@@ -70,7 +122,7 @@ class AuthService {
         localStorage.clear()
     }
 
-    saveToken(token) {
+    setToken(token) {
         localStorage.setItem('token', token);
     }
 

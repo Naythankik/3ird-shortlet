@@ -1,5 +1,3 @@
-import Header from "../index/Header.jsx";
-import Footer from "../index/Footer.jsx";
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import authService from "../../services/authService.js";
@@ -63,7 +61,6 @@ const LoginPage = () => {
 
     return (
         <div>
-            <Header/>
             <main className="flex flex-col w-[90%] md:w-2/5 mx-auto py-8 gap-4">
                 <form onSubmit={doRegister} method='post'>
                     <fieldset className="w-full shadow-2xl p-9 rounded-md flex flex-col gap-5 text-blue-500">
@@ -151,7 +148,6 @@ const LoginPage = () => {
                 <Link to='/login' className="underline text-blue-500 text-center"
                       title="Create an account to own or rent an apartment">Have an account?</Link>
             </main>
-            <Footer/>
         </div>
     );
 };

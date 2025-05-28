@@ -1,6 +1,3 @@
-import Footer from "./Footer.jsx";
-import Header from "./Header.jsx";
-
 const blogPosts = [
     {
         id: 1,
@@ -28,7 +25,6 @@ const blogPosts = [
 const BlogsPage = () => {
     return (
         <>
-            <Header />
             <main className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     <h1 className="text-4xl font-bold text-center text-blue-700 mb-12">Our Blog</h1>
@@ -49,7 +45,6 @@ const BlogsPage = () => {
                     </div>
                 </div>
             </main>
-            <Footer />
         </>
     );
 };

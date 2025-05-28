@@ -12,7 +12,7 @@ const Header = () => {
         {
             path: '/about',
             name: 'About',
-            description: 'To know more about how we handle shortlet on our platfomr'
+            description: 'To know more about how we handle shortlet on our platform'
         },
         {
             path: '/blogs',
@@ -49,7 +49,7 @@ const Header = () => {
 
     return (
         <header className="flex sticky top-0 bg-white justify-between px-10 py-7 border-b border-blue-500 uppercase">
-            <Link to="/home" className="text-base md:text-2xl font-extrabold text-blue-500 flex items-center gap-2">
+            <Link to="/" className="text-base md:text-2xl font-extrabold text-blue-500 flex items-center gap-2">
                 <FaHome />3ird-shortlet
             </Link>
             <div className="hidden md:flex gap-3 items-center font-medium">

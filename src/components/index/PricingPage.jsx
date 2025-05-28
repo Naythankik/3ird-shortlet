@@ -1,5 +1,3 @@
-import Header from "./Header.jsx";
-import Footer from "./Footer.jsx";
 import {Link} from "react-router-dom";
 
 function PricingPage() {
@@ -44,7 +42,6 @@ function PricingPage() {
 
     return (
         <>
-            <Header />
             <main className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto text-center">
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">Pricing Plans</h1>
@@ -72,7 +69,6 @@ function PricingPage() {
                     </div>
                 </div>
             </main>
-            <Footer />
         </>
     );
 }

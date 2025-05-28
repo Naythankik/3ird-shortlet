@@ -1,5 +1,3 @@
-import Footer from "./Footer.jsx";
-import Header from "./Header.jsx";
 import { BedDouble, MapPin, Wifi, ShieldCheck, CalendarCheck2 } from "lucide-react";
 
 const services = [
@@ -33,7 +31,6 @@ const services = [
 const ServicePages = () => {
     return (
         <>
-            <Header />
             <main className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto text-center">
                     <h1 className="text-4xl font-bold text-blue-700 mb-4">Our Services</h1>
@@ -52,7 +49,6 @@ const ServicePages = () => {
                     </div>
                 </div>
             </main>
-            <Footer />
         </>
     );
 };

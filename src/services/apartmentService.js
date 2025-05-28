@@ -8,8 +8,10 @@ class ApartmentService {
             return data;
         }catch(err){
             if(err.status === 401){
-                authService.logout()
-                window.location.reload();
+                console.log(err)
+                return err
+                // authService.logout()
+                // window.location.reload();
             }
             throw new Error(err.message);
         }

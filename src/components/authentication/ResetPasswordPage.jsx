@@ -1,5 +1,3 @@
-import Header from "../index/Header.jsx";
-import Footer from "../index/Footer.jsx";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import authService from "../../services/authService.js";
@@ -49,7 +47,6 @@ const ResetPasswordPage = () => {
 
     return (
         <div>
-            <Header />
             <main className="flex flex-col w-[90%] md:w-2/5 mx-auto py-8 gap-4">
                 <form onSubmit={handleSubmit} method='post'>
                     <fieldset className="w-full shadow-2xl p-9 rounded-md flex flex-col gap-5 text-blue-500">
@@ -96,7 +93,6 @@ const ResetPasswordPage = () => {
                     Remembered your password? Login here
                 </Link>
             </main>
-            <Footer />
         </div>
     );
 };
