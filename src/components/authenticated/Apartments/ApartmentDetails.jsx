@@ -2,13 +2,14 @@ import {Link, useParams} from "react-router-dom";
 import { useEffect, useState } from "react";
 import apartmentService from "../../../services/apartmentService.js";
 import spinner from "../../Spinner.jsx";
-import {FaStar} from "react-icons/fa";
+import {FaHeart, FaStar} from "react-icons/fa";
 
 const ApartmentDetails = () => {
     const { apartmentId } = useParams();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [apartment, setApartment] = useState(null);
+    const [wishList, setWishList] = useState(false);
 
     const fetchApartment = async (id) => {
         try {
@@ -49,13 +50,19 @@ const ApartmentDetails = () => {
                     <div className="flex justify-between items-center text-blue-500">
                     <h1 className="text-2xl font-bold mb-2">{apartment.name}</h1>
                         <Link to={`/apartment/${apartmentId}/book/${apartment.name}`}
-                              className="border-blue-500 border-2 py-2 px-6 rounded-lg">Book apartment</Link>
+                              className="border-blue-500 hover:border-white hover:text-white hover:bg-blue-500 border-2 py-2 px-6 rounded-lg">Book apartment</Link>
                     </div>
 
-                    <div className="text-gray-600 mb-4">
+                    <div className="text-gray-600 mb-4 flex justify-between items-center">
                         <p>
                             <strong>Address:</strong> {`${apartment.address.street}, ${apartment.address.city}, ${apartment.address.state}, ${apartment.address.country} (${apartment.address.postcode})`}
                         </p>
+                        <button
+                            onClick={() => setWishList(!wishList)}
+                            className={`text-2xl ${wishList ? 'text-red-500 hover:text-red-300' : 'text-blue-500 hover:text-blue-300'} mr-1 mt-2`}
+                            title="Add apartment to wishlist">
+                            <FaHeart />
+                        </button>
                     </div>
                     <div className="mb-4">
                         <p className="text-gray-700">

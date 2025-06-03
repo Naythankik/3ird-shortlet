@@ -1,4 +1,3 @@
-import Image from "../../../assets/apartment.webp";
 import {Link} from "react-router-dom";
 
 const ApartmentComponent = (props) => {

@@ -4,7 +4,6 @@ import bookingService from "../../../services/bookingService.js";
 import authService from "../../../services/authService.js";
 
 const BookApartment = () => {
-    const navigate = useNavigate();
     const params = useParams();
 
     const [formData, setFormData] = useState({
@@ -15,6 +14,8 @@ const BookApartment = () => {
     });
 
     const [errors, setErrors] = useState({});
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState('')
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,8 +36,10 @@ const BookApartment = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         if (validateForm()) {
-            const url = `bookings/create/${params.apartmentId}`
+            const url = `bookings/create/${params.apartmentId}`;
+
             try{
                 const response = await bookingService.createBooking(url, {
                     checkInDate: formData.checkIn,
@@ -44,21 +47,26 @@ const BookApartment = () => {
                     guests: formData.guests,
                     specialRequests: formData.requests || null,
                 });
-                console.log(response)
+
+                if(response.status === 201){
+                    setSuccess('Booking successful. Redirecting to apartment page...')
+                    setTimeout(() => {
+                        history.back()
+                    }, 3000)
+                }
             }catch (error){
-                setErrors( {general: error.message[0] || 'An error occurred. Please try again.' });
-                console.log(error, errors)
+                setError(error.message || 'An error occurred. Please try again.')
             }finally {
                 setErrors({})
             }
-            return
         }
     };
 
     return (
         <div className="max-w-2xl mx-auto p-6 text-blue-600">
             <h1 className="text-3xl font-bold mb-6">Book an Apartment</h1>
-            {errors.general && <p className="text-red-500 text-sm">{errors.general}</p>}
+            { error && <p className="text-red-500 text-sm my-5">{error}</p> }
+            { success && <p className="text-green-500 text-sm my-5">{success}</p> }
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>

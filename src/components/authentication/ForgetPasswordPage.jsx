@@ -4,7 +4,6 @@ import authService from "../../services/authService.js";
 import spinner from "../Spinner.jsx";
 
 const ForgetPasswordPage = () => {
-    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -24,23 +23,12 @@ const ForgetPasswordPage = () => {
 
         try {
             const response = await authService.forgetPassword({ email });
-            console.log(response)
-            return
-
-            if (response) {
-                setSuccessMessage('If the email exists, a password reset link has been sent.');
-            } else {
-                setError('Password reset request failed. Please try again.');
-            }
+            if(response.statusText === 'OK') setSuccessMessage(response.data?.message);
         } catch (error) {
             setError(error.message || 'An error occurred. Please try again.');
         } finally {
             setIsLoading(false);
         }
-
-        setTimeout(() => {
-            navigate('/login');
-        }, 5000)
     };
 
     return (

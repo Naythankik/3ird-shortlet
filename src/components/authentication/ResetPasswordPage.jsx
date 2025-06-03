@@ -2,12 +2,17 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import authService from "../../services/authService.js";
 import spinner from "../Spinner.jsx";
+import {FaEye, FaEyeSlash} from "react-icons/fa";
 
 const ResetPasswordPage = () => {
     const navigate = useNavigate();
     const { token } = useParams();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState({
+        new: false,
+        confirm: false,
+    });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
@@ -31,14 +36,21 @@ const ResetPasswordPage = () => {
         }
 
         try {
-            const response = await authService.resetPassword({ token, password, confirmPassword });
+            const response = await authService.resetPassword(token, { password, confirmPassword });
             if(response){
-                setError('Password reset successful. Please login to continue.');
+                setSuccessMessage('Password reset successful. Please login to continue.');
                 setTimeout(() => {
                     navigate('/login');
                 }, 5000)
             }
         }catch (e){
+            if(String(e.message).includes('expired reset token')){
+                setError('The token has expired.You\'re getting redirected to the forget password page')
+                setTimeout(() => {
+                    navigate('/forget-password')
+                }, 3000)
+                return
+            }
             setError(e.message || 'An error occurred. Please try again.');
         }finally {
             setIsLoading(false);
@@ -54,27 +66,41 @@ const ResetPasswordPage = () => {
                         <span className="text-green-400 text-sm italic text-center capitalize">{successMessage}</span>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="password" className="text-base md:text-lg">New Password</label>
-                            <input
-                                name="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="border-2 border-blue-500 focus-visible:outline-blue-500 rounded-lg px-3 py-2"
-                                id="password"
-                                type="password"
-                                placeholder="Enter your new password"
+                            <div className="relative">
+                                <input
+                                    name="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="border-2 border-blue-500 focus-visible:outline-blue-500 rounded-lg px-3 py-2 w-full"
+                                    id="password"
+                                    type={ showPassword.new ? 'text' : 'password' }
+                                    placeholder="Enter your new password"
                             />
+                                <span
+                                    className="flex items-center absolute right-5 top-0 bottom-0 cursor-pointer text-blue-500 hover:text-blue-500"
+                                    onClick={() => setShowPassword(prevState => ({...prevState, new: !prevState.new}))}>
+                                    {showPassword.new ? <FaEyeSlash/> : <FaEye />}
+                                </span>
+                            </div>
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="confirmPassword" className="text-base md:text-lg">Confirm New Password</label>
-                            <input
-                                name="confirmPassword"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="border-2 border-blue-500 focus-visible:outline-blue-500 rounded-lg px-3 py-2"
-                                id="confirmPassword"
-                                type="password"
-                                placeholder="Confirm your new password"
-                            />
+                            <div className="relative">
+                                <input
+                                    name="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    className="border-2 border-blue-500 focus-visible:outline-blue-500 rounded-lg px-3 py-2 w-full"
+                                    id="confirmPassword"
+                                    type={ showPassword.confirm ? 'text' : 'password' }
+                                    placeholder="Confirm your new password"
+                                />
+                                <span
+                                    className="flex items-center absolute right-5 top-0 bottom-0 cursor-pointer text-blue-500 hover:text-blue-500"
+                                    onClick={() => setShowPassword(prevState => ({...prevState, confirm: !prevState.confirm}))}>
+                                    {showPassword.confirm ? <FaEyeSlash/> : <FaEye />}
+                                </span>
+                            </div>
                         </div>
                         <div className="flex flex-col gap-2">
                             {

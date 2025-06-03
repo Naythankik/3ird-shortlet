@@ -102,17 +102,15 @@ class AuthService {
 
     async forgetPassword(user) {
         try {
-           await axios.post('auth/forget-password', user);
-            return true;
+            return await axios.post('auth/password/forgot', user);
         } catch (error) {
             throw error.response?.data || error;
         }
     }
 
-    async resetPassword(body){
+    async resetPassword(token, body){
         try {
-           await axios.post('auth/reset-password', body);
-           return true;
+           return await axios.post(`auth/password/reset/${token}`, body);
         } catch (error) {
             throw error.response?.data || error;
         }

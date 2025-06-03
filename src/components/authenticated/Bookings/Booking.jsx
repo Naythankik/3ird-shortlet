@@ -1,23 +1,62 @@
 import { useEffect, useState } from "react";
 import bookingService from "../../../services/bookingService.js";
 import spinner from "../../Spinner.jsx";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ArrowUpDown } from "lucide-react";
 
 const Booking = () => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedBooking, setSelectedBooking] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortedBy, setSortedBy] = useState(null);
+
 
     const tableHeaders = [
-        'ID',
-        'Apartment',
-        'Booking Status',
-        'Payment Status',
-        'Price',
-        'Check In',
-        'Check Out',
+        { name: 'ID', hasArrow: false },
+        { name: 'Apartment', hasArrow: true },
+        { name: 'Booking Status', hasArrow: true },
+        { name: 'Payment Status', hasArrow: true },
+        { name: 'Price', hasArrow: true },
+        { name: 'Check In', hasArrow: true },
+        { name: 'Check Out', hasArrow: true }
     ];
+
+    const sortByKey = (key) => {
+        const newOrder = sortedBy === key && sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortOrder(newOrder);
+        setSortedBy(key);
+
+        const sortedBookings = bookings.sort((a, b) => {
+            let comparison = 0;
+
+            switch(key) {
+                case 'Apartment':
+                    comparison = a.apartment?.name.localeCompare(b.apartment?.name);
+                    break;
+                case 'Booking Status':
+                    comparison = a.bookingStatus.localeCompare(b.bookingStatus);
+                    break;
+                case 'Payment Status':
+                    comparison = a.paymentStatus.localeCompare(b.paymentStatus);
+                    break;
+                case 'Price':
+                    comparison = Number(a.totalapplePrice) - Number(b.totalPrice);
+                    break;
+                case 'Check In':
+                    comparison = new Date(a.checkInDate) - new Date(b.checkInDate);
+                    break;
+                case 'Check Out':
+                    comparison = new Date(a.checkOutDate) - new Date(b.checkOutDate);
+                    break;
+                default:
+                    return 0;
+            }
+            return newOrder === 'asc' ? comparison : -comparison;
+        });
+        setBookings(sortedBookings);
+    };
 
     const getStatusColor = (status) => {
         let color;
@@ -45,7 +84,6 @@ const Booking = () => {
         try {
             setLoading(true);
             const { booking } = await bookingService.getBookings('/bookings/read');
-            return
             setBookings(booking);
         } catch (err) {
             console.log(err.message);
@@ -58,7 +96,6 @@ const Booking = () => {
 
         try {
             const { booking } = await bookingService.getBooking(id);
-            console.log(booking)
             setSelectedBooking(booking);
             setShowModal(true);
         } catch (err) {
@@ -77,7 +114,7 @@ const Booking = () => {
     }, [showModal]);
 
     const getDate = (value) => {
-        return new Date(value).toLocaleDateString(); // Optional: makes date readable
+        return new Date(value).toLocaleDateString();
     };
 
     if(loading){
@@ -102,6 +139,9 @@ const Booking = () => {
                         </h2>
 
                         <div className="space-y-2 text-slate-700">
+                            <div className="w-full h-96 rounded-lg overflow-hidden relative">
+                                <img className="w-full h-full" src={selectedBooking.apartment?.images[0]} alt={selectedBooking.apartment?.name} />
+                            </div>
                             <p><strong>Apartment:</strong> {selectedBooking.apartment?.name}</p>
                             <div className="flex flex-col md:flex-row justify-between space-y-2 md:space-y-0">
                                 <p><strong>Total Price:</strong> ₦{Number(selectedBooking.totalPrice).toLocaleString()}
@@ -146,7 +186,31 @@ const Booking = () => {
                 <thead>
                 <tr>
                     {tableHeaders.map((header, index) => (
-                        <th scope="col" className="border border-slate-600 text-blue-500 p-2" key={index}>{header}</th>
+                        <th
+                            scope="col"
+                            className="border border-slate-600 text-blue-500 p-2 cursor-pointer"
+                            key={index}
+                        >
+                            <div
+                                className="flex items-center gap-2"
+                                onClick={() => header.hasArrow && sortByKey(header.name)}
+                            >
+                                {header.name}
+                                {header.hasArrow && (
+                                    <ArrowUpDown
+                                        className={`h-4 w-4 transition-transform ${
+                                            sortedBy === header.name
+                                                ? sortOrder === 'asc'
+                                                    ? 'text-blue-700'
+                                                    : 'text-blue-700 rotate-180'
+                                                : ''
+                                        }`}
+                                    />
+                                )}
+                            </div>
+
+                        </th>
+
                     ))}
                 </tr>
                 </thead>

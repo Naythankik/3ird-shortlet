@@ -37,7 +37,7 @@ const Dashboard = () => {
                     <div className={`text-blue-500 flex flex-nowrap justify-evenly gap-6 transition-opacity duration-500 ${
                             loading ? 'opacity-0' : 'opacity-100'
                         }`}>
-                        {apartments.length > 0 ? (
+                        {apartments?.length > 0 ? (
                             apartments.map((apartment, index) => (
                                 <ApartmentComponent key={index} apartment={apartment} />
                             ))
