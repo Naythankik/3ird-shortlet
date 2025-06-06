@@ -27,7 +27,7 @@ function Layout() {
             <Sidebar />
             <main className="flex-1 py-4 px-5">
                 <div className="flex justify-between text-blue-500">
-                    <p className="text-base md:text-2xl font-bold">{dayTime()}, {authService.getUser()}</p>
+                    <p className="text-base md:text-2xl font-bold">Good {dayTime()}, {authService.getUser()}</p>
                     <button
                         onClick={handleLogout}
                         className="text-lg text-red-500 flex gap-1 items-center"

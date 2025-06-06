@@ -85,13 +85,6 @@ class AuthService {
         }
     }
 
-    async ensureValidToken() {
-        const expiration = localStorage.getItem('tokenExpiration');
-        if (expiration && Date.now() >= (parseInt(expiration) - 60000)) { // 1 minute before expiration
-            await this.refreshToken();
-        }
-    }
-
     async requestVerification(token) {
         try {
             return await axios.post(`auth/request-verification/${token}`)

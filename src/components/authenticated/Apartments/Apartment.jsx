@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { debounce } from "lodash";
 import spinner from "../../Spinner.jsx";
 import ApartmentComponent from "./ApartmentComponent.jsx";
+import NoDataComponent from "../../helpers/NoDataComponent.jsx";
 
 const Apartment = () => {
     const [apartments, setApartments] = useState([]);
@@ -77,52 +78,53 @@ const Apartment = () => {
     }
 
     return (
-        <>
-            <div className="w-full my-5 flex justify-between">
-                <input
-                    type="text"
-                    value={search}
-                    onChange={handleSearch}
-                    placeholder="Search for an apartment"
-                    className="border-2 focus-visible:outline-blue-500 text-blue-500 rounded-lg py-1 px-3 w-1/3 placeholder-blue-500 border-blue-500"
-                />
+        <div className="mt-16 bg-transparent">
+            {/*The search and filter block*/}
+            { apartments.length > 0 &&
+                <div className="w-full my-5 flex justify-between">
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={handleSearch}
+                        placeholder="Search for an apartment"
+                        className="border-2 focus-visible:outline-blue-500 text-blue-500 rounded-lg py-1 px-3 w-1/3 placeholder-blue-500 border-blue-500"
+                    />
 
-                <select
-                    className="border-2 focus-visible:outline-blue-500 text-blue-500 rounded-lg py-1 px-3 w-1/3 placeholder-blue-500 border-blue-500 bg-transparent"
-                    value={sortBy}
-                    onChange={handleSort}
-                >
-                    <option value="" disabled>Sort by</option>
-                    {sortOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
+                    <select
+                        className="border-2 focus-visible:outline-blue-500 text-blue-500 rounded-lg py-1 px-3 w-1/3 placeholder-blue-500 border-blue-500 bg-transparent"
+                        value={sortBy}
+                        onChange={handleSort}
+                    >
+                        <option value="" disabled>Sort by</option>
+                        {sortOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            }
+            {/*Display error message*/}
             {error && (
                 <div className="text-red-500 text-center my-4">
                     {error}
                 </div>
             )}
-
-
-            {showSpinner ? spinner.apartmentSpinner() : (
-                <div
-                    className={`text-blue-500 flex flex-wrap justify-evenly gap-6 transition-opacity duration-500 ${
+            { apartments.length > 0 ?
+                <div className={`text-blue-500 flex flex-wrap justify-evenly gap-6 transition-opacity duration-500 ${
                         loading ? 'opacity-0' : 'opacity-100'
                     }`}
                 >
-                    {apartments.length > 0 ? (
+                    {
                         apartments.map((apartment, index) => (
                             <ApartmentComponent key={index} apartment={apartment} />
                         ))
-                    ) : (
-                        <p>No apartments available</p>
-                    )}
+                    }
                 </div>
-            )}
+                    :
+                <NoDataComponent title="No apartments found" description="Try changing your search or sorting criteria" />
+
+            }
 
             {pagination.totalPages > 1 && (
                 <div className="w-full my-8 flex justify-center">
@@ -151,7 +153,7 @@ const Apartment = () => {
                     </ul>
                 </div>
             )}
-        </>
+        </div>
     )
 }
 

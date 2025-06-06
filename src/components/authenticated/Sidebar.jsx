@@ -18,7 +18,7 @@ const Sidebar = () => {
         { name: 'Dashboard', path: '/dashboard', icon: <FaHome /> },
         { name: 'Apartments', path: '/apartments', icon: <FaBuilding /> },
         { name: 'Bookings', path: '/bookings', icon: <FaCalendarCheck /> },
-        { name: 'Wishlist', path: '/wishlist', icon: <FaHeart /> },
+        { name: 'Wishlists', path: '/wishlists', icon: <FaHeart /> },
         { name: 'Messages', path: '/messages', icon: <FaEnvelope /> },
         { name: 'Notifications', path: '/notifications', icon: <FaBell /> },
         { name: 'Promotions', path: '/promotions', icon: <FaTags /> },
@@ -38,7 +38,7 @@ const Sidebar = () => {
                                 to={menu.path}
                                 title={menu.name}
                                 className={`flex gap-2 items-center px-4 py-2 w-fit md:w-auto rounded hover:bg-blue-600 ${
-                                    location.pathname === menu.path ? 'md:bg-blue-700' : ''
+                                    location.pathname.includes(menu.name.toLowerCase().slice(0, -1)) ? 'md:bg-blue-700' : ''
                                 }`}
                             >
                                 <span

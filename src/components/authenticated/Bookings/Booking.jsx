@@ -3,6 +3,7 @@ import bookingService from "../../../services/bookingService.js";
 import spinner from "../../Spinner.jsx";
 import { Link } from "react-router-dom";
 import { ArrowUpDown } from "lucide-react";
+import NoDataComponent from "../../helpers/NoDataComponent.jsx";
 
 const Booking = () => {
     const [bookings, setBookings] = useState([]);
@@ -123,7 +124,6 @@ const Booking = () => {
 
     return (
         <div className="mt-16 bg-transparent">
-
             {showModal && selectedBooking && (
                 <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center">
                     <div className="bg-white rounded-2xl shadow-lg w-full md:max-w-2xl p-6 relative">
@@ -178,68 +178,70 @@ const Booking = () => {
                     </div>
                 </div>
             )}
-
-            <table className="table-auto border-collapse border border-slate-500 w-full">
-                <caption className="caption-top text-lg font-semibold text-blue-500 mb-2">
-                    All Apartment Bookings Overview
-                </caption>
-                <thead>
-                <tr>
-                    {tableHeaders.map((header, index) => (
-                        <th
-                            scope="col"
-                            className="border border-slate-600 text-blue-500 p-2 cursor-pointer"
-                            key={index}
-                        >
-                            <div
-                                className="flex items-center gap-2"
-                                onClick={() => header.hasArrow && sortByKey(header.name)}
-                            >
-                                {header.name}
-                                {header.hasArrow && (
-                                    <ArrowUpDown
-                                        className={`h-4 w-4 transition-transform ${
-                                            sortedBy === header.name
-                                                ? sortOrder === 'asc'
-                                                    ? 'text-blue-700'
-                                                    : 'text-blue-700 rotate-180'
-                                                : ''
-                                        }`}
-                                    />
-                                )}
-                            </div>
-
-                        </th>
-
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {bookings.length === 0 ? (
+            {bookings.length > 0 ?
+                <table className="table-auto border-collapse border border-slate-500 w-full">
+                    <caption className="caption-top text-lg font-semibold text-blue-500 mb-2">
+                        All Apartment Bookings Overview
+                    </caption>
+                    <thead>
                     <tr>
-                        <td colSpan={tableHeaders.length} className="text-center p-4 text-slate-500">
-                            No bookings available.
-                        </td>
+                        {tableHeaders.map((header, index) => (
+                            <th
+                                scope="col"
+                                className="border border-slate-600 text-blue-500 p-2 cursor-pointer"
+                                key={index}
+                            >
+                                <div
+                                    className="flex items-center gap-2"
+                                    onClick={() => header.hasArrow && sortByKey(header.name)}
+                                >
+                                    {header.name}
+                                    {header.hasArrow && (
+                                        <ArrowUpDown
+                                            className={`h-4 w-4 transition-transform ${
+                                                sortedBy === header.name
+                                                    ? sortOrder === 'asc'
+                                                        ? 'text-blue-700'
+                                                        : 'text-blue-700 rotate-180'
+                                                    : ''
+                                            }`}
+                                        />
+                                    )}
+                                </div>
+
+                            </th>
+
+                        ))}
                     </tr>
-                ) : (
-                    bookings.map((booking, index) => (
-                        <tr key={index}
-                            onClick={() => getABooking(booking.apartment.name, booking.id)}
-                            className="hover:bg-slate-200 transition-all cursor-pointer">
-                            <td className="border border-slate-700 text-slate-700 p-2 text-center">{index + 1}</td>
-                            <td className="truncate max-w-[200px] border border-slate-700 text-slate-700 p-2">{booking.apartment?.name}</td>
-                            <td className={`border border-slate-700 p-2 text-left md:text-center capitalize ${getStatusColor(booking.bookingStatus)}`}>{booking.bookingStatus}</td>
-                            <td className={`border border-slate-700 p-2 text-left md:text-center capitalize ${getStatusColor(booking.paymentStatus)}`}>{booking.paymentStatus}</td>
-                            <td className="border border-slate-700 text-slate-700 text-left md:text-center p-2">₦{Number(booking.totalPrice).toLocaleString()}</td>
-                            <td className="border border-slate-700 text-slate-700 text-left md:text-center p-2">{getDate(booking.checkInDate)}</td>
-                            <td className="border border-slate-700 text-slate-700 text-left md:text-center p-2">{getDate(booking.checkOutDate)}</td>
+                    </thead>
+                    <tbody>
+                    {bookings.length === 0 ? (
+                        <tr>
+                            <td colSpan={tableHeaders.length} className="text-center p-4 text-slate-500">
+                                No bookings available.
+                            </td>
                         </tr>
-                    ))
+                    ) : (
+                        bookings.map((booking, index) => (
+                            <tr key={index}
+                                onClick={() => getABooking(booking.apartment.name, booking.id)}
+                                className="hover:bg-slate-200 transition-all cursor-pointer">
+                                <td className="border border-slate-700 text-slate-700 p-2 text-center">{index + 1}</td>
+                                <td className="truncate max-w-[200px] border border-slate-700 text-slate-700 p-2">{booking.apartment?.name}</td>
+                                <td className={`border border-slate-700 p-2 text-left md:text-center capitalize ${getStatusColor(booking.bookingStatus)}`}>{booking.bookingStatus}</td>
+                                <td className={`border border-slate-700 p-2 text-left md:text-center capitalize ${getStatusColor(booking.paymentStatus)}`}>{booking.paymentStatus}</td>
+                                <td className="border border-slate-700 text-slate-700 text-left md:text-center p-2">₦{Number(booking.totalPrice).toLocaleString()}</td>
+                                <td className="border border-slate-700 text-slate-700 text-left md:text-center p-2">{getDate(booking.checkInDate)}</td>
+                                <td className="border border-slate-700 text-slate-700 text-left md:text-center p-2">{getDate(booking.checkOutDate)}</td>
+                            </tr>
+                        ))
                     )}
 
-                </tbody>
-            </table>
-
+                    </tbody>
+                </table>
+                :
+                <NoDataComponent title="No bookings available" description="You have not made any bookings yet." />
+            }
         </div>
     );
 };

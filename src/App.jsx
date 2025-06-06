@@ -21,6 +21,7 @@ import Apartment from "./components/authenticated/Apartments/Apartment.jsx";
 import ApartmentDetails from "./components/authenticated/Apartments/ApartmentDetails.jsx";
 import BookApartment from "./components/authenticated/Bookings/BookApartment.jsx";
 import Booking from "./components/authenticated/Bookings/Booking.jsx";
+import Wishlist from "./components/authenticated/Wishlists/Wishlist.jsx";
 
 const AuthGuard = ({ element, isAuthRequired }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -115,6 +116,10 @@ const routes = createBrowserRouter([
             {
                 path: '/bookings',
                 element: <AuthGuard element={<Booking />} isAuthRequired={true} />
+            },
+            {
+                path: '/wishlists',
+                element: <AuthGuard element={<Wishlist />} isAuthRequired={true} />
             },
             {
                 path: '/apartment/:apartmentId',
