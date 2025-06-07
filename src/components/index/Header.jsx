@@ -65,17 +65,20 @@ const Header = () => {
             </div>
             <nav className={`md:hidden flex-col gap-6 font-medium absolute rounded-lg top-16 right-7 min-w-2/5 bg-blue-100 px-8 py-5 transition-all duration-300 ease-in-out ${isOpen ? "flex" : "hidden"}`}>
                 { routes.map((route, index) => (
-                    <Link
+                    <button
                         key={index}
-                        to={route.path}
                         className={`${route.path !== '/login' ? `${isActive(route.path)} text-blue-500 hover:underline flex gap-4 items-center` :
                         'py-2 px-4 text-center bg-blue-500 hover:text-blue-500 hover:bg-white text-white border border-blue-500 rounded-md tracking-wide'}
                         `}
                         title={route.title}
+                        onClick={() => {
+                            toggleMenu
+                            window.location.href = route.path
+                        }}
                     >
                         <FaInfo className={`${route.path !== '/login' ? 'inline-block' : 'hidden'}`} />
                         {route.name}
-                    </Link>
+                    </button>
                 )) }
             </nav>
         </header>
