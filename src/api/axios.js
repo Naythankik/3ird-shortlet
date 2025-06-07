@@ -28,8 +28,7 @@ instance.interceptors.response.use((response) => response, async (error) => {
         const token = authService.getToken();
         if(token){
             try {
-                const response = await authService.refreshToken()
-                console.log(response)
+                await authService.refreshToken()
             } catch (error) {
                 authService.logout()
                 window.location.reload();
