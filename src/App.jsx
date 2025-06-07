@@ -132,7 +132,7 @@ const routes = createBrowserRouter([
         ]
     },
     {
-        path: '*',
+        path: '/*',
         element: <NoMatch />
     }
     ]
