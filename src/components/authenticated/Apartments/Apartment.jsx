@@ -128,23 +128,25 @@ const Apartment = () => {
             }
 
             {pagination.totalPages > 1 && (
-                <div className="w-full my-8 flex justify-center">
-                    <ul className="flex gap-3 text-blue-500 text-xl">
+                <div className="w-full my-8 flex">
+                    <ul className="flex gap-3 text-blue-500 text-xl justify-between w-full">
                         <li
                             className={`cursor-pointer ${pagination.currentPage === 1 && "opacity-50 pointer-events-none"}`}
                             onClick={() => handlePageClick(pagination.currentPage - 1)}
                         >
                             Prev
                         </li>
-                        {Array.from({ length: pagination.totalPages }, (_, i) => (
-                            <li
-                                key={i}
-                                className={`cursor-pointer px-2 ${pagination.currentPage === i + 1 ? 'font-bold underline' : ''}`}
-                                onClick={() => handlePageClick(i + 1)}
-                            >
-                                {i + 1}
-                            </li>
-                        ))}
+                        <div className="flex gap-4">
+                            {Array.from({ length: pagination.totalPages }, (_, i) => (
+                                <li
+                                    key={i}
+                                    className={`cursor-pointer flex justify-center items-center w-7 h-7 text-base hover:bg-blue-100 rounded-full ${pagination.currentPage === i + 1 ? 'bg-blue-100 rounded-full' : ''}`}
+                                    onClick={() => handlePageClick(i + 1)}
+                                >
+                                    {i + 1}
+                                </li>
+                            ))}
+                        </div>
                         <li
                             className={`cursor-pointer ${pagination.currentPage === pagination.totalPages && "opacity-50 pointer-events-none"}`}
                             onClick={() => handlePageClick(pagination.currentPage + 1)}

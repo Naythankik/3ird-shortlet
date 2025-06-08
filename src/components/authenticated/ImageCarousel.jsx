@@ -18,12 +18,12 @@ const ImageCarousel = ({ images, name, interval = 4000 }) => {
     }, [totalImages, interval]);
 
     return (
-        <div className="relative w-full h-40 overflow-hidden rounded-lg mb-3">
+        <div className="relative w-full h-72 md:h-40 overflow-hidden rounded-lg mb-3">
             {/* Image */}
             <img
                 src={images[currentImageIndex]}
                 alt={`${name} image`}
-                className="w-full h-40 object-cover transition-opacity duration-300"
+                className="w-full h-72 md:h-40 object-cover transition-opacity duration-300"
                 loading="lazy"
             />
 
@@ -32,14 +32,14 @@ const ImageCarousel = ({ images, name, interval = 4000 }) => {
                 <>
                     <button
                         onClick={goToPrev}
-                        className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 text-blue-600 rounded-full p-1 shadow"
+                        className="absolute top-1/2 left-2 transform -translate-y-1/2 hover:bg-opacity-100 text-3xl text-blue-600 rounded-full p-1 shadow"
                         aria-label="Previous image"
                     >
                         ‹
                     </button>
                     <button
                         onClick={goToNext}
-                        className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 text-blue-600 rounded-full p-1 shadow"
+                        className="absolute top-1/2 right-2 transform -translate-y-1/2 hover:bg-opacity-100 text-3xl text-blue-600 rounded-full p-1 shadow"
                         aria-label="Next image"
                     >
                         ›

@@ -13,7 +13,7 @@ const ApartmentComponent = ({ apartment }) => {
                 <div className="flex gap-2 flex-col">
                     <Link to={`/apartment/${apartment.id}`} className="text-lg"
                           title={apartment.name}>{apartment.name}</Link>
-                    <p className="text-gray-500 text-justify text-base" title={apartment.description}>
+                    <p className="text-gray-400 text-justify text-base">
                         {apartment.description?.length > 180
                             ? `${apartment.description.substring(0, 180)}...`
                             : apartment.description}
