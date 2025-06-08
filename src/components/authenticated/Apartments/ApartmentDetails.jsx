@@ -2,14 +2,25 @@ import {Link, useParams} from "react-router-dom";
 import { useEffect, useState } from "react";
 import apartmentService from "../../../services/apartmentService.js";
 import spinner from "../../Spinner.jsx";
-import {FaHeart, FaStar} from "react-icons/fa";
+import { FaHeart, FaStar } from "react-icons/fa";
+import wishlistService from "../../../services/wishlistService.js";
 
 const ApartmentDetails = () => {
     const { apartmentId } = useParams();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [apartment, setApartment] = useState(null);
-    const [wishList, setWishList] = useState(false);
+    const [like, setLike] = useState(false);
+    const [wishlists, setWishlists] = useState([]);
+
+    async function getWishlists() {
+        try{
+            const { wishlists } = await wishlistService.getWishlist(apartmentId);
+            setWishlists(wishlists);
+        }catch(error){
+            setError(error);
+        }
+    }
 
     const fetchApartment = async (id) => {
         try {
@@ -23,6 +34,23 @@ const ApartmentDetails = () => {
             setLoading(false);
         }
     };
+
+    const handleWishlist = async (id) => {
+        try{
+            const {status} = await wishlistService.addApartmentToWishlist(apartmentId, id);
+
+            if (status === 200) {
+                setLike(false);
+            }
+        }catch(error){
+            setError(error);
+        }
+
+    }
+
+    useEffect(() => {
+        getWishlists();
+    }, [])
 
     useEffect(() => {
         fetchApartment(apartmentId);
@@ -53,16 +81,25 @@ const ApartmentDetails = () => {
                               className="border-blue-500 hover:border-white hover:text-white hover:bg-blue-500 border-2 py-2 px-6 rounded-lg">Book apartment</Link>
                     </div>
 
-                    <div className="text-gray-600 mb-4 flex justify-between items-center">
+                    <div className="text-gray-600 mb-4 flex justify-between items-center relative">
                         <p>
-                            <strong>Address:</strong> {`${apartment.address.street}, ${apartment.address.city}, ${apartment.address.state}, ${apartment.address.country} (${apartment.address.postcode})`}
+                            <strong>Address:</strong>{`${apartment.address.street}, ${apartment.address.city}, ${apartment.address.state}, ${apartment.address.country} (${apartment.address.postcode})`}
                         </p>
                         <button
-                            onClick={() => setWishList(!wishList)}
-                            className={`text-2xl ${wishList ? 'text-red-500 hover:text-red-300' : 'text-blue-500 hover:text-blue-300'} mr-1 mt-2`}
+                            onClick={() => setLike(!like)}
+                            className={`text-2xl ${like ? 'text-red-500 hover:text-red-300' : 'text-blue-500 hover:text-blue-300'} mr-1 mt-2`}
                             title="Add apartment to wishlist">
                             <FaHeart />
                         </button>
+                        <ul className={`${like ? 'block' : 'hidden'} bg-white opacity-100 border-2 border-blue-200 absolute w-[50%] md:w-[25%] rounded-lg right-0 top-2`}>
+                            {wishlists.map((item, i) => (
+                                <li key={i}
+                                    onClick={() => handleWishlist(item.id)}
+                                    className={`border-blue-200 px-3 py-3 cursor-pointer hover:bg-gray-100 ${i !== wishlists.length - 1 && 'border-b-2'}`}>
+                                    {item.name}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                     <div className="mb-4">
                         <p className="text-gray-700">

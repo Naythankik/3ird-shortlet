@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaPlus } from "react-icons/fa";
 import wishlistService from "../../../services/wishlistService.js";
 import ViewWishlistModal from "./ViewWishlistModal.jsx";
-import UpdateWishlistModal from "./UpdateWishlistModal.jsx";
+import CreateOrUpdateWishlistModal from "./CreateOrUpdateWishlistModal.jsx";
 import NoDataComponent from "../../helpers/NoDataComponent.jsx";
 
 const Wishlist = () => {
@@ -10,12 +10,14 @@ const Wishlist = () => {
     const [loading, setLoading] = useState(true);
     const [selectedWishlist, setSelectedWishlist] = useState(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [mode, setMode] = useState('edit');
+    const [isCreateOrUpdateModalOpen, setIsCreateOrUpdateModalOpen] = useState(false);
 
     const fetchWishlists = async () => {
         setLoading(true)
         try {
             const { wishlists }  = await wishlistService.getWishlist()
+
             setWishlists(wishlists)
             setLoading(false);
         } catch (error) {
@@ -35,10 +37,16 @@ const Wishlist = () => {
         }
     }
 
+    const handleModifyButton = (wishlist = null, mode) => {
+        setSelectedWishlist({})
+        setMode(mode)
+        setIsCreateOrUpdateModalOpen(true)
+    }
+
     const handleDeleteWishlist = async (wishlistId) => {
         try{
             await wishlistService.deleteAWishlist(wishlistId)
-            window.location.reload()
+            fetchWishlists();
         }catch (error) {
             console.error('Error updating wishlist:', error);
         }
@@ -59,10 +67,16 @@ const Wishlist = () => {
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-2xl font-bold text-blue-500">My Wishlists</h1>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200">
-                    <FaPlus />
-                    New Wishlist
-                </button>
+                { Object.keys(wishlists).length < 1 && (
+                    <button
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200"
+                        onClick={() => {handleModifyButton(null, 'create')}}
+                    >
+                        <FaPlus />
+                        New Wishlist
+                    </button>
+                )
+                }
             </div>
 
             {wishlists.length > 0 ?
@@ -70,8 +84,10 @@ const Wishlist = () => {
                     {wishlists.map((wishlist) => (
                         <div key={wishlist.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100">
                             <div className="p-6">
-                                <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-xl font-semibold text-gray-800">{wishlist.name}</h2>
+                                <div className="flex flex-col gap-2 mb-4">
+                                    <h2 className="text-xl font-semibold text-gray-600 truncate">{wishlist.name}</h2>
+                                    <span className="italic text-md text-gray-400">{wishlist.description}</span>
+                                    <p className="text-gray-400">Apartments: <span className="">{Object.keys(wishlist.apartments).length}</span></p>
                                 </div>
 
                                 <div className="flex gap-2 mt-6 text-sm">
@@ -83,10 +99,7 @@ const Wishlist = () => {
                                     >View All
                                     </button>
                                     <button
-                                        onClick={() => {
-                                            setSelectedWishlist(wishlist);
-                                            setIsEditModalOpen(true);
-                                        }}
+                                        onClick={() => {handleModifyButton(wishlist, 'edit')}}
                                         className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg transition-colors duration-200"
                                     >
                                         Edit
@@ -104,8 +117,9 @@ const Wishlist = () => {
                     {/* Add New Wishlist Card */}
                     <button
                         className="group border-2 border-dashed border-gray-300 rounded-xl p-6
-                             hover:border-blue-500 transition-colors duration-200 h-full min-h-[300px]
-                             flex flex-col items-center justify-center"
+                        hover:border-blue-500 transition-colors duration-200 h-full min-h-[300px]
+                        flex flex-col items-center justify-center"
+                        onClick={() => {handleModifyButton(null, 'create')}}
                     >
                         <div className="w-12 h-12 rounded-full bg-gray-100 group-hover:bg-blue-50 flex items-center justify-center mb-4 transition-colors duration-200">
                             <svg
@@ -132,15 +146,18 @@ const Wishlist = () => {
                     onClose={() => {
                         setIsViewModalOpen(false);
                         setSelectedWishlist(null);
+                        fetchWishlists()
                     }}
                 />
             )}
 
-            {isEditModalOpen && selectedWishlist && (
-                <UpdateWishlistModal
+            {isCreateOrUpdateModalOpen && (
+                <CreateOrUpdateWishlistModal
                     wishlist={selectedWishlist}
+                    mode={mode}
+                    onSuccess={fetchWishlists}
                     onClose={() => {
-                        setIsEditModalOpen(false);
+                        setIsCreateOrUpdateModalOpen(false);
                         setSelectedWishlist(null);
                     }}
                 />

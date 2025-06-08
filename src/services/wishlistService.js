@@ -10,6 +10,30 @@ class WishlistService {
         }
     }
 
+    async getWishlistById(id) {
+        try{
+            return await axios.get(`wishlists/${id}`);
+        }catch (e) {
+            return e.message()
+        }
+    }
+
+    async createWishlist(payload) {
+        try{
+            return await axios.post(`wishlists`, payload);
+        }catch (e) {
+            return e.message
+        }
+    }
+
+    async addApartmentToWishlist(apartmentId, wishlistId) {
+        try{
+            return await axios.post(`wishlists/${wishlistId}/apartments/${apartmentId}`);
+        }catch (e) {
+            return e.message
+        }
+    }
+
     async getAWishlist(wishlistId){
         try{
             const response = await axios.get(`wishlists/${wishlistId}`);
@@ -30,17 +54,15 @@ class WishlistService {
 
     async updateAWishlist(wishlistId, payload){
         try{
-            const response = await axios.put(`wishlists/${wishlistId}`, payload);
-            return response.data;
+            return await axios.put(`wishlists/${wishlistId}`, payload);
         }catch (e) {
-            return e
+            return e.message()
         }
     }
 
     async deleteAnApartment(wishlist, apartment){
         try{
-            const response = await axios.delete(`wishlists/${wishlist}/apartments/${apartment}`);
-            return response.data;
+            return await axios.delete(`wishlists/${wishlist}/apartments/${apartment}`);
         }catch (e) {
             return e.message()
         }

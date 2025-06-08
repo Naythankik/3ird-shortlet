@@ -5,18 +5,17 @@ import wishlistService from "../../../services/wishlistService.js";
 const ViewWishlistModal = ({ wishlist, onClose }) => {
     const [successMsg, setSuccessMsg] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+
     const handleRemoveFromWishlist = async (apartmentId) => {
         try {
-            const response = await wishlistService.deleteAnApartment(wishlist.id, apartmentId);
-            setSuccessMsg(response.data?.message);
+            const {data} = await wishlistService.deleteAnApartment(wishlist.id, apartmentId);
+            setSuccessMsg(data?.message);
             setTimeout(() => {
                 setSuccessMsg(null)
-            }, 4000)
+                onClose()
+            }, 2000)
         }catch (e){
             setErrorMsg(e.message())
-            setTimeout(() => {
-                setErrorMsg(null)
-            }, 4000)
         }
     }
     return (
@@ -25,10 +24,7 @@ const ViewWishlistModal = ({ wishlist, onClose }) => {
                 <div className="p-6 border-b border-gray-200">
                     <div className="flex justify-between items-center">
                         <h2 className="text-2xl font-bold text-blue-500">{wishlist.name}</h2>
-                        <button
-                            onClick={onClose}
-                            className="p-2 hover:bg-gray-100 rounded-full"
-                        >
+                        <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
                             <FaTimes className="text-gray-500" />
                         </button>
                     </div>
