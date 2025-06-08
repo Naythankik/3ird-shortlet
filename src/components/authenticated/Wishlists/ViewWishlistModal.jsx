@@ -5,19 +5,27 @@ import wishlistService from "../../../services/wishlistService.js";
 const ViewWishlistModal = ({ wishlist, onClose }) => {
     const [successMsg, setSuccessMsg] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [processingId, setProcessingId] = useState(null);
+
 
     const handleRemoveFromWishlist = async (apartmentId) => {
+        setProcessingId(apartmentId)
         try {
             const {data} = await wishlistService.deleteAnApartment(wishlist.id, apartmentId);
             setSuccessMsg(data?.message);
+
+            wishlist.apartments = wishlist.apartments.filter(a => a.id !== apartmentId);
             setTimeout(() => {
                 setSuccessMsg(null)
                 onClose()
             }, 2000)
         }catch (e){
-            setErrorMsg(e.message())
+            setErrorMsg(e?.response?.data?.message || e.message || "Something went wrong");
+        }finally {
+            setProcessingId(null);
         }
     }
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-hidden">
@@ -29,8 +37,19 @@ const ViewWishlistModal = ({ wishlist, onClose }) => {
                         </button>
                     </div>
                 </div>
-                {successMsg && <div className="text-green-300 ml-6 py-2">{successMsg}</div>}
-                {errorMsg && <div className="text-red-300 ml-6 py-2">{errorMsg}</div>}
+
+                {/*Error and success message container*/}
+                {successMsg && (
+                    <div className="ml-6 my-2 bg-green-100 text-green-700 px-4 py-2 rounded">
+                        {successMsg}
+                    </div>
+                )}
+                {errorMsg && (
+                    <div className="ml-6 my-2 bg-red-100 text-red-700 px-4 py-2 rounded">
+                        {errorMsg}
+                    </div>
+                )}
+
 
                 <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -51,6 +70,7 @@ const ViewWishlistModal = ({ wishlist, onClose }) => {
                                     <button
                                         className="mt-2 text-sm text-red-500 hover:text-red-600"
                                         onClick={() => handleRemoveFromWishlist(apartment.id)}
+                                        disabled={processingId === apartment.id}
                                     >
                                         Remove from wishlist
                                     </button>

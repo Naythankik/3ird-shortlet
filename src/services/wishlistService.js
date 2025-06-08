@@ -1,12 +1,16 @@
 import axios from "../api/axios.js";
 
 class WishlistService {
+    handleError(e) {
+        throw e?.response?.data?.message || e.message || "Something went wrong";
+    }
+
     async getWishlist() {
         try{
             const response = await axios.get(`wishlists`);
             return response.data;
         }catch (e) {
-            return e.message()
+            return this.handleError(e)
         }
     }
 
@@ -14,7 +18,7 @@ class WishlistService {
         try{
             return await axios.get(`wishlists/${id}`);
         }catch (e) {
-            return e.message()
+            return this.handleError(e)
         }
     }
 
@@ -22,7 +26,7 @@ class WishlistService {
         try{
             return await axios.post(`wishlists`, payload);
         }catch (e) {
-            return e.message
+            return this.handleError(e)
         }
     }
 
@@ -30,7 +34,7 @@ class WishlistService {
         try{
             return await axios.post(`wishlists/${wishlistId}/apartments/${apartmentId}`);
         }catch (e) {
-            return e.message
+            return this.handleError(e)
         }
     }
 
@@ -39,7 +43,7 @@ class WishlistService {
             const response = await axios.get(`wishlists/${wishlistId}`);
             return response.data;
         }catch (e) {
-            return e.message()
+            return this.handleError(e)
         }
     }
 
@@ -48,7 +52,7 @@ class WishlistService {
             const response = await axios.delete(`wishlists/${wishlistId}`);
             return response.data;
         }catch (e) {
-            return e.message()
+            return this.handleError(e)
         }
     }
 
@@ -56,7 +60,7 @@ class WishlistService {
         try{
             return await axios.put(`wishlists/${wishlistId}`, payload);
         }catch (e) {
-            return e.message()
+            return this.handleError(e)
         }
     }
 
@@ -64,7 +68,7 @@ class WishlistService {
         try{
             return await axios.delete(`wishlists/${wishlist}/apartments/${apartment}`);
         }catch (e) {
-            return e.message()
+            return this.handleError(e)
         }
     }
 }

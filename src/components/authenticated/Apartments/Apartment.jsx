@@ -1,5 +1,5 @@
 import apartmentService from "../../../services/apartmentService.js";
-import { useState, useEffect } from "react";
+import {useState, useEffect, useCallback} from "react";
 import { debounce } from "lodash";
 import spinner from "../../Spinner.jsx";
 import ApartmentComponent from "./ApartmentComponent.jsx";
@@ -26,24 +26,26 @@ const Apartment = () => {
 
 
 
-    const fetchApartments = async (searchTerm = '', sort = '', page = 1, limit = 20) => {
-        try {
-            setLoading(true);
-            const url = `/apartments/read?page=${page}&sortBy=${sort}&limit=${limit}&search=${searchTerm}`;
+    const fetchApartments = useCallback( async (searchTerm = '', sort = '', page = 1, limit = 20) => {
+            try {
+                setLoading(true);
+                const url = `/apartments/read?page=${page}&sortBy=${sort}&limit=${limit}&search=${searchTerm}`;
 
-            const { apartments: data, pagination } = await apartmentService.getApartments(url);
+                const { apartments: data, pagination } = await apartmentService.getApartments(url);
 
-            setApartments(data);
-            setError(null)
-            setPagination(pagination);
-        } catch (err) {
-            setError(err.message || 'Failed to fetch apartments');
-            console.log(err.message);
-        } finally {
-            setLoading(false);
-            setTimeout(() => setShowSpinner(false), 300);
+                setApartments(data);
+                setError(null)
+                setPagination(pagination);
+            } catch (err) {
+                setError(err.message || 'Failed to fetch apartments');
+                console.log(err.message);
+            } finally {
+                setLoading(false);
+                setTimeout(() => setShowSpinner(false), 300);
+            }
         }
-    };
+    );
+
 
     useEffect(() => {
         const debouncedFetch = debounce(() => {
@@ -52,9 +54,8 @@ const Apartment = () => {
 
         debouncedFetch();
         return () => debouncedFetch.cancel();
-        },
-        [search, sortBy, pagination.currentPage, fetchApartments]
-    );
+    }, [search, sortBy, pagination.currentPage, fetchApartments]);
+
 
 
     const handlePageClick = (page) => {

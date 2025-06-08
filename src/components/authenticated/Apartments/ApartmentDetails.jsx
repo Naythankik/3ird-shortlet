@@ -15,10 +15,10 @@ const ApartmentDetails = () => {
 
     async function getWishlists() {
         try{
-            const { wishlists } = await wishlistService.getWishlist(apartmentId);
+            const { wishlists } = await wishlistService.getWishlist();
             setWishlists(wishlists);
         }catch(error){
-            setError(error);
+            setError(error?.response?.data?.message || "Something went wrong");
         }
     }
 
@@ -43,7 +43,7 @@ const ApartmentDetails = () => {
                 setLike(false);
             }
         }catch(error){
-            setError(error);
+            setError(error?.response?.data?.message || "Something went wrong");
         }
 
     }
@@ -62,7 +62,11 @@ const ApartmentDetails = () => {
 
     return (
         <div>
-            {error && <p className="text-red-600">{error}</p>}
+            {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    {error}
+                </div>
+            )}
             {!apartment && !error && <p>No apartment found.</p>}
 
             {apartment && (
@@ -70,8 +74,8 @@ const ApartmentDetails = () => {
                     <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 w-full mb-3"
                          style={{scrollBehavior: 'smooth', scrollbarWidth: 'none'}}>
                         {apartment.images?.map((image, i) => (
-                                <img key={i} src={image} alt={image.name}
-                                     className="h-96 rounded-lg object-cover min-w-full" />
+                            <img key={i} src={image} alt={image.name}
+                                 className="h-96 rounded-lg object-cover min-w-full" />
                         ))}
                     </div>
 
@@ -87,19 +91,21 @@ const ApartmentDetails = () => {
                         </p>
                         <button
                             onClick={() => setLike(!like)}
-                            className={`text-2xl ${like ? 'text-red-500 hover:text-red-300' : 'text-blue-500 hover:text-blue-300'} mr-1 mt-2`}
+                            className={`text-2xl text-blue-500 hover:text-blue-300 mr-1 mt-2`}
                             title="Add apartment to wishlist">
                             <FaHeart />
                         </button>
-                        <ul className={`${like ? 'block' : 'hidden'} bg-white opacity-100 border-2 border-blue-200 absolute w-[50%] md:w-[25%] rounded-lg right-0 top-2`}>
-                            {wishlists.map((item, i) => (
-                                <li key={i}
-                                    onClick={() => handleWishlist(item.id)}
-                                    className={`border-blue-200 px-3 py-3 cursor-pointer hover:bg-gray-100 ${i !== wishlists.length - 1 && 'border-b-2'}`}>
-                                    {item.name}
-                                </li>
-                            ))}
-                        </ul>
+                        {wishlists.length > 0 && (
+                            <ul className={`${like ? 'block' : 'hidden'} bg-white opacity-100 border-2 border-blue-200 absolute w-[50%] md:w-[25%] rounded-lg right-0 top-2`}>
+                                {wishlists.map((item, i) => (
+                                    <li key={i}
+                                        onClick={() => handleWishlist(item.id)}
+                                        className={`border-blue-200 px-3 py-3 cursor-pointer hover:bg-gray-100 ${i !== wishlists.length - 1 && 'border-b-2'}`}>
+                                        {item.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                     <div className="mb-4">
                         <p className="text-gray-700">

@@ -14,14 +14,14 @@ const EditWishlistModal = ({ wishlist, mode, onClose, onSuccess }) => {
         e.preventDefault();
         setLoading(true)
 
-        const payload = JSON.stringify({ name: name.trim(), description: description.trim() });
+        const payload = { name: name.trim(), description: description.trim() };
 
         try {
             const { data, status } = mode === 'create' ?
                 await wishlistService.createWishlist(payload) :
                 await wishlistService.updateAWishlist(wishlist.id, payload);
 
-            if(status === 201){
+            if (status === 201 || status === 200) {
                 setSuccessMsg(data.message || `Successfully ${title.includes('new') ? 'created' : 'updated'} wishlist`)
 
                 setErrorMsg(null);
@@ -77,8 +77,8 @@ const EditWishlistModal = ({ wishlist, mode, onClose, onSuccess }) => {
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                rows="3"
-                                className="w-full px-3 py-2 rounded-lg focus:border-blue-500 border-2 border-gray-300 focus-visible:outline-blue-500"
+
+                                className="w-full resize-none px-3 py-2 rounded-lg focus:border-blue-500 border-2 border-gray-300 focus-visible:outline-blue-500"
                             />
                         </div>
                     </div>

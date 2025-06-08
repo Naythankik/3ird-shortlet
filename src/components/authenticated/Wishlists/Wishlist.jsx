@@ -17,9 +17,7 @@ const Wishlist = () => {
         setLoading(true)
         try {
             const { wishlists }  = await wishlistService.getWishlist()
-
             setWishlists(wishlists)
-            setLoading(false);
         } catch (error) {
             console.error('Error fetching wishlists:', error);
         }finally {
@@ -38,15 +36,17 @@ const Wishlist = () => {
     }
 
     const handleModifyButton = (wishlist = null, mode) => {
-        setSelectedWishlist({})
+        setSelectedWishlist(wishlist ?? {})
         setMode(mode)
         setIsCreateOrUpdateModalOpen(true)
     }
 
     const handleDeleteWishlist = async (wishlistId) => {
         try{
-            await wishlistService.deleteAWishlist(wishlistId)
-            fetchWishlists();
+            if (window.confirm("Are you sure you want to delete this wishlist?")) {
+                await wishlistService.deleteAWishlist(wishlistId)
+                fetchWishlists();
+            }
         }catch (error) {
             console.error('Error updating wishlist:', error);
         }
