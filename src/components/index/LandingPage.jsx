@@ -150,19 +150,27 @@ const FAQList = [
     }
 ]
 
-const FAQArticle = ({question, answer}) => {
-    const [seeAnswer, setSeeAnswer] = useState(false);
-    return (
-        <button className="w-full rounded-lg p-5 bg-white shadow" onClick={() => setSeeAnswer(!seeAnswer)}>
-            <p className="flex items-center justify-between">
-                {question}
-            {!seeAnswer ? <FaCaretDown/> : <FaCaretUp/>}
-            </p>
-            <span className={`${seeAnswer ? 'inline-block' : 'hidden'} mt-4 text-left text-balance font-medium text-gray-500`}>
-                {answer}
+const FAQArticle = ({articles}) => {
+    const [seeAnswer, setSeeAnswer] = useState(null);
+    const toggleOptions = (id) => {
+        setSeeAnswer(prevId => (prevId === id ? null : id));
+    }
+
+    return articles.map((article, index) => {
+        const isOpen = seeAnswer === index;
+
+        return (
+            <button key={index} className="w-full rounded-lg p-5 bg-white shadow" onClick={() => toggleOptions(index)}>
+                <p className="flex items-center justify-between">
+                    {article.question}
+                    {isOpen ? <FaCaretUp /> : <FaCaretDown />}
+                </p>
+                <span className={`${isOpen ? 'inline-block' : 'hidden'} mt-4 text-left text-balance font-medium text-gray-500`}>
+                {article.answer}
             </span>
-        </button>
-    )
+            </button>
+        )
+    })
 }
 
 const ArticleSection = ({title, description, price, image}) => {
@@ -371,9 +379,7 @@ const LandingPage = () => {
                             Frequently Asked Questions
                         </h1>
                         <div className="flex flex-col gap-3">
-                            {FAQList.map((faq, index) => (
-                                <FAQArticle answer={faq.answer} key={index} question={faq.question} />
-                            ))}
+                            <FAQArticle articles={FAQList} />
                         </div>
                     </div>
 

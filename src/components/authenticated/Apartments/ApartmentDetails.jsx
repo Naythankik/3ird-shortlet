@@ -1,9 +1,11 @@
-import {Link, useParams} from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import apartmentService from "../../../services/apartmentService.js";
 import spinner from "../../Spinner.jsx";
-import { FaHeart, FaStar } from "react-icons/fa";
 import wishlistService from "../../../services/wishlistService.js";
+import ReviewList from "../ReviewList.jsx";
+import { Heart } from "lucide-react";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 const ApartmentDetails = () => {
     const { apartmentId } = useParams();
@@ -59,7 +61,6 @@ const ApartmentDetails = () => {
     if (loading) {
         return spinner.apartmentSpinner();
     }
-
     return (
         <div>
             {error && (
@@ -85,15 +86,15 @@ const ApartmentDetails = () => {
                               className="border-blue-500 hover:border-white hover:text-white hover:bg-blue-500 border-2 py-2 px-6 rounded-lg">Book apartment</Link>
                     </div>
 
-                    <div className="text-gray-600 mb-4 flex justify-between items-center relative">
+                    <div className="text-gray-700 mb-4 flex justify-between items-center relative">
                         <p>
-                            <strong>Address:</strong>{`${apartment.address.street}, ${apartment.address.city}, ${apartment.address.state}, ${apartment.address.country} (${apartment.address.postcode})`}
+                            <strong>Address: </strong>{`${apartment.address.street}, ${apartment.address.city}, ${apartment.address.state}, ${apartment.address.country} (${apartment.address.postcode})`}
                         </p>
                         <button
                             onClick={() => setLike(!like)}
-                            className={`text-2xl text-blue-500 hover:text-blue-300 mr-1 mt-2`}
+                            className={`text-2xl mr-1 mt-2`}
                             title="Add apartment to wishlist">
-                            <FaHeart />
+                            <Heart className="text-blue-500 hover:fill-blue-500" />
                         </button>
                         {wishlists.length > 0 && (
                             <ul className={`${like ? 'block' : 'hidden'} bg-white opacity-100 border-2 border-blue-200 absolute w-[50%] md:w-[25%] rounded-lg right-0 top-2`}>
@@ -119,52 +120,47 @@ const ApartmentDetails = () => {
                         </p>
                     </div>
 
-                    <p className="text-gray-700 mb-4">{apartment.description}</p>
+                    <p className="text-gray-700 mb-4 text-justify">{apartment.description}</p>
 
-                    <div className="mb-4">
-                        <p className="text-lg font-semibold">Properties</p>
-                        <ul className="list-disc list-inside text-gray-600 text-justify">
+                    <div className="mb-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2">Key Features</h3>
+                        <ul className="list-disc pl-5 text-gray-700 space-y-1">
                             {apartment.properties?.map((property, i) => (
-                                <li key={i}>{property}</li>
+                                <li key={i} className="leading-snug">
+                                    <span className="text-justify">{property}</span>
+                                </li>
                             ))}
                         </ul>
                     </div>
 
                     <div className="mb-4">
-                        <p className="text-lg font-semibold">Rules:</p>
-                        {apartment.rules?.length > 0 ? (
-                            <ul className="list-disc list-inside text-gray-600 text-justify">
-                                {apartment.rules.map((rule, i) => (
-                                    <li key={i}>{rule}</li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="text-gray-500">No rules provided</p>
-                        )}
+                        <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-2">Apartment Rules</h3>
+                        <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                            {apartment.rules.map((rule, index) => (
+                                <li key={index} className="leading-snug">
+                                    <span className="text-justify">{rule}</span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
 
-                    {apartment.reviews.length > 0 &&
-                    <div className="bg-transparent">
-                        <p className="text-lg font-semibold mb-2">Reviews from other users</p>
-                            <div className="flex flex-col gap-4">
-                                {apartment?.reviews?.map((review, i) => (
-                                    <article className="shadow-2xl p-4" key={i}>
-                                        <div className="flex justify-between">
-                                            <div>
-                                                <p>{`${review.user.firstName} ${review.user.lastName}`}</p>
-                                                <span className="flex gap-2 items-center">{review.rating}
-                                                    <FaStar/></span>
-                                            </div>
-                                            <img className="w-[40px] h-[40px] rounded-full" src={review.user.profilePicture} alt={review.user.firstName} />
-                                        </div>
-                                        <span>Was this helpful?</span>
-                                        <span>{review.comment}</span>
-
-                                    </article>
-                                ))}
-                            </div>
+                    <div className="mb-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2">Apartment Location</h3>
+                        <div className="w-full h-64 rounded-xl overflow-hidden shadow-md border">
+                            <MapContainer center={[apartment.location.lat, apartment.location.lng]} zoom={13} scrollWheelZoom={false} className="h-full w-full">
+                                <TileLayer
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+                                />
+                                <Marker position={[apartment.location.lat, apartment.location.lng]}>
+                                    <Popup>
+                                        This is the apartment location.
+                                    </Popup>
+                                </Marker>
+                            </MapContainer>
+                        </div>
                     </div>
-                    }
+                    {apartment.reviews.length > 0 && <ReviewList reviews={apartment.reviews} />}
                 </div>
             )}
         </div>
