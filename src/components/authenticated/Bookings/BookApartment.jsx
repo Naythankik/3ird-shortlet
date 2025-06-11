@@ -2,16 +2,24 @@ import React, { useState } from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import bookingService from "../../../services/bookingService.js";
 import authService from "../../../services/authService.js";
+import paymentService from "../../../services/paymentService.js";
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const BookApartment = () => {
     const params = useParams();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         checkIn: '',
         checkOut: '',
         guests: 1,
-        requests: ''
+        requests: '',
+        currency: 'ngn',
+        paymentDescription: '',
+        paymentMethod: 'card',
     });
+
 
     const [errors, setErrors] = useState({});
     const [error, setError] = useState('')
@@ -49,10 +57,21 @@ const BookApartment = () => {
                 });
 
                 if(response.status === 201){
-                    setSuccess('Booking successful. Redirecting to apartment page...')
-                    setTimeout(() => {
-                        history.back()
-                    }, 3000)
+                    const paymentResponse = await paymentService.createCheckoutSession(response.booking.id,{
+                        amount: response.booking.totalPrice,
+                        "currency": formData.currency,
+                        "description": formData.paymentDescription,
+                        "method": formData.paymentMethod
+                    });
+
+                    const stripe = await stripePromise;
+                    const result = await stripe.redirectToCheckout({
+                        sessionId: paymentResponse.id,
+                    });
+
+                    if (result.error) {
+                        setError(result.error.message);
+                    }
                 }
             }catch (error){
                 setError(error.message || 'An error occurred. Please try again.')
@@ -120,6 +139,51 @@ const BookApartment = () => {
                         className="w-full p-2 border-2 focus-visible:outline-blue-500 rounded-lg px-3 py-2"
                     />
                     {errors.guests && <p className="text-red-500 text-sm">{errors.guests}</p>}
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium mb-1">Payment Description</label>
+                    <input
+                        type="text"
+                        name="paymentDescription"
+                        value={formData.paymentDescription}
+                        onChange={handleChange}
+                        className="w-full p-2 border-2 focus-visible:outline-blue-500 rounded-lg px-3 py-2"
+                        placeholder="e.g., Booking for 3 nights"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium mb-1">Currency</label>
+                    <select
+                        name="currency"
+                        value={formData.currency}
+                        onChange={handleChange}
+                        className="w-full p-2 border-2 bg-white focus-visible:outline-blue-500 rounded-lg px-3 py-2"
+                    >
+                        <option disabled defaultChecked>Select currency</option>
+                        <option value="usd">USD</option>
+                        <option value="ngn">NGN</option>
+                        <option value="eur">EUR</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium mb-1">Payment Method</label>
+                    <select
+                        name="paymentMethod"
+                        value={formData.paymentMethod}
+                        onChange={handleChange}
+                        className="w-full p-2 border-2 bg-white focus-visible:outline-blue-500 rounded-lg px-3 py-2"
+                    >
+                        <option disabled defaultChecked>Select payment method</option>
+                        <option value="card">Card</option>
+                        <option value="alipay">Alipay</option>
+                        <option value="klarna">Klarna</option>
+                        <option value="afterpay_clearpay">Afterpay Clearpay</option>
+                        <option value="us_bank_account">US Bank Account</option>
+                        <option value="sepa_debit">SEPA Debit</option>
+                    </select>
                 </div>
 
                 <div>

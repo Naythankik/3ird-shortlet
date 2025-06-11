@@ -19,7 +19,7 @@ const Footer = () => {
                     </div>
                     <div className="flex flex-col gap-2 items-center md:items-start">
                         <Link to="/about">About</Link>
-                        <Link to="/faq">FAQ</Link>
+                        <Link to="#faq">FAQ</Link>
                         <Link to="/terms">Terms</Link>
                     </div>
                     <div className="flex flex-col gap-2 items-center md:items-start">

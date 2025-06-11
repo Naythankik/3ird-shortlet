@@ -349,8 +349,7 @@ const LandingPage = () => {
 
                 </section>
 
-                <section
-                    className="flex flex-col items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
+                <section className="flex flex-col items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
                     <h2 className="w-3/4 md:w-2/5 text-center text-wrap text-lg md:text-2xl font-bold leading-tight text-blue-800 uppercase">
                         Reviews from our previous guests
                     </h2>
@@ -371,7 +370,7 @@ const LandingPage = () => {
 
                 </section>
 
-                <section
+                <section id="faq"
                     className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
 
                     <div className="md:w-1/2 text-center space-y-6 md:space-y-8 w-[90%] mx-auto">
