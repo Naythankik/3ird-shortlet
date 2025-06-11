@@ -7,7 +7,6 @@ const ViewWishlistModal = ({ wishlist, onClose }) => {
     const [errorMsg, setErrorMsg] = useState(null);
     const [processingId, setProcessingId] = useState(null);
 
-
     const handleRemoveFromWishlist = async (apartmentId) => {
         setProcessingId(apartmentId)
         try {

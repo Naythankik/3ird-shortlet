@@ -54,10 +54,6 @@ const AuthGuard = ({ element, isAuthRequired }) => {
 
 const routes = createBrowserRouter([
     {
-        path: '/*',
-        element: <NoMatch />
-    },
-    {
         element: <PublicLayout />,
         children: [
             {
@@ -135,6 +131,10 @@ const routes = createBrowserRouter([
             },
         ]
     },
+    {
+        path: '/*',
+        element: <NoMatch />
+    }
     ]
 );
 

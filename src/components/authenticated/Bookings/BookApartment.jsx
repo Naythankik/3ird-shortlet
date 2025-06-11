@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import bookingService from "../../../services/bookingService.js";
 import authService from "../../../services/authService.js";
 import paymentService from "../../../services/paymentService.js";
@@ -8,7 +8,6 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const BookApartment = () => {
     const params = useParams();
-    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         checkIn: '',
@@ -19,11 +18,9 @@ const BookApartment = () => {
         paymentDescription: '',
         paymentMethod: 'card',
     });
-
-
+    const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,6 +41,7 @@ const BookApartment = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setError('');
         if (validateForm()) {
             const url = `bookings/create/${params.apartmentId}`;
@@ -77,15 +75,24 @@ const BookApartment = () => {
                 setError(error.message || 'An error occurred. Please try again.')
             }finally {
                 setErrors({})
+                setLoading(false)
             }
         }
     };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-spin rounded-full h-48 w-48 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="max-w-2xl mx-auto p-6 text-blue-600">
             <h1 className="text-3xl font-bold mb-6">Book an Apartment</h1>
             { error && <p className="text-red-500 text-sm my-5">{error}</p> }
-            { success && <p className="text-green-500 text-sm my-5">{success}</p> }
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>

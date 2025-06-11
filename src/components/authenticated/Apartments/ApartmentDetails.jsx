@@ -1,15 +1,19 @@
-import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import apartmentService from "../../../services/apartmentService.js";
-import spinner from "../../Spinner.jsx";
 import wishlistService from "../../../services/wishlistService.js";
 import ReviewList from "../ReviewList.jsx";
 import { Heart } from "lucide-react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 const ApartmentDetails = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+
     const { apartmentId } = useParams();
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const [apartment, setApartment] = useState(null);
     const [like, setLike] = useState(false);
@@ -58,20 +62,36 @@ const ApartmentDetails = () => {
         fetchApartment(apartmentId);
     }, [apartmentId]);
 
+    useEffect(() => {
+        if (queryParams.has('success')) {
+            setSuccess('Payment has been verified, check your mail for follow up');
+            navigate(location.pathname, { replace: true });
+        }
+
+        if (queryParams.has('cancel')) {
+            setError('Payment was cancelled. Please try again.');
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location.search]);
+
+
     if (loading) {
-        return spinner.apartmentSpinner();
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-spin rounded-full h-48 w-48 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
     }
+
     return (
         <div>
-            {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {error}
-                </div>
-            )}
             {!apartment && !error && <p>No apartment found.</p>}
 
+            {success && <div className="text-green-600 w-[92%] mx-auto">{success}</div>}
+            {error && <div className="text-red-600 w-[92%] mx-auto">{error}</div>}
+
             {apartment && (
-                <div className="bg-white p-6 shadow-md rounded-lg max-w-5xl mx-auto mt-6">
+                <div className="bg-white p-6 shadow-md rounded-lg max-w-5xl mx-auto mt-4">
                     <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 w-full mb-3"
                          style={{scrollBehavior: 'smooth', scrollbarWidth: 'none'}}>
                         {apartment.images?.map((image, i) => (
