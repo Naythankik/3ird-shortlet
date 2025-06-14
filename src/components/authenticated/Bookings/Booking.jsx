@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import bookingService from "../../../services/bookingService.js";
-import spinner from "../../Spinner.jsx";
 import { Link } from "react-router-dom";
 import { ArrowUpDown } from "lucide-react";
 import NoDataComponent from "../../helpers/NoDataComponent.jsx";
+import Spinner from "../../Spinner.jsx";
+import {toast} from "react-toastify";
 
 const Booking = () => {
     const [bookings, setBookings] = useState([]);
@@ -94,13 +95,12 @@ const Booking = () => {
     };
 
     const getABooking = async (name, id) => {
-
         try {
             const { booking } = await bookingService.getBooking(id);
             setSelectedBooking(booking);
             setShowModal(true);
         } catch (err) {
-            console.log(err.message);
+            toast.error(err.message)
         } finally {
             setLoading(false);
         }
@@ -119,7 +119,9 @@ const Booking = () => {
     };
 
     if(loading){
-        return spinner.tableSpinner()
+        return (
+            <Spinner />
+        )
     }
 
     return (

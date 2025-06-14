@@ -299,7 +299,7 @@ const LandingPage = () => {
                                     <label className="text-gray-700 text-sm md:text-lg text-nowrap text-start">Number
                                         of Rooms</label>
                                     <select className="p-3 bg-white rounded-xl text-sm md:text-base  focus:outline-none">
-                                        <option selected disabled>Any</option>
+                                        <option defaultChecked disabled>Any</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>

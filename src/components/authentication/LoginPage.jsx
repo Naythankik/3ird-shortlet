@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {Link, useNavigate} from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import authService from "../../services/authService.js";
-import spinner from "../Spinner.jsx";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -84,13 +83,11 @@ const LoginPage = () => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                        {
-                            isLoading ? spinner.buttonSpinner('Logging in.....') :
-                            <button
-                            className={`${isLoading && 'italic'} bg-blue-500 hover:text-blue-500 text-white hover:bg-white border-2 border-blue-500 rounded-lg px-3 py-2`}
-                            id="submit">Login
+                        <button
+                            disabled={isLoading}
+                            className={`${isLoading ? 'opacity-25' : 'opacity-100 cursor-pointer'} bg-blue-500 text-white border-2 border-blue-500 rounded-lg px-3 py-2`}
+                            id="submit">{isLoading ? 'Logging.........' : 'Login'}
                         </button>
-                        }
                     </div>
                 </fieldset>
             </form>

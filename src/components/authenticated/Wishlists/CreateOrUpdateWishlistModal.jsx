@@ -58,27 +58,27 @@ const EditWishlistModal = ({ wishlist, mode, onClose, onSuccess }) => {
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-blue-500 mb-1">
                                 Wishlist Name
                             </label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-3 py-2 rounded-lg focus:border-blue-500 border-2 border-gray-300 focus-visible:outline-blue-500"
+                                className="w-full px-3 py-2 rounded-lg focus:border-blue-500 border-2 text-blue-500 border-gray-300 focus-visible:outline-blue-500"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-blue-500 mb-1">
                                 Description (optional)
                             </label>
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
 
-                                className="w-full resize-none px-3 py-2 rounded-lg focus:border-blue-500 border-2 border-gray-300 focus-visible:outline-blue-500"
+                                className="w-full resize-none px-3 py-2 text-blue-500 rounded-lg focus:border-blue-500 border-2 border-gray-300 focus-visible:outline-blue-500"
                             />
                         </div>
                     </div>

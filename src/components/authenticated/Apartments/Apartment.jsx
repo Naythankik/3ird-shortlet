@@ -1,9 +1,9 @@
 import apartmentService from "../../../services/apartmentService.js";
 import {useState, useEffect, useCallback} from "react";
 import { debounce } from "lodash";
-import spinner from "../../Spinner.jsx";
 import ApartmentComponent from "./ApartmentComponent.jsx";
 import NoDataComponent from "../../helpers/NoDataComponent.jsx";
+import Spinner from "../../Spinner.jsx";
 
 const Apartment = () => {
     const [apartments, setApartments] = useState([]);
@@ -75,7 +75,9 @@ const Apartment = () => {
 
 
     if (loading && showSpinner) {
-        return spinner.apartmentSpinner()
+        return (
+            <Spinner />
+        )
     }
 
     return (

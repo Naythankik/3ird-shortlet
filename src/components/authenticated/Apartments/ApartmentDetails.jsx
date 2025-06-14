@@ -5,6 +5,9 @@ import wishlistService from "../../../services/wishlistService.js";
 import ReviewList from "../ReviewList.jsx";
 import { Heart } from "lucide-react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import Spinner from "../../Spinner.jsx";
+import {toast, ToastContainer} from 'react-toastify';
+
 
 const ApartmentDetails = () => {
     const navigate = useNavigate();
@@ -13,18 +16,30 @@ const ApartmentDetails = () => {
 
     const { apartmentId } = useParams();
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState('');
-    const [error, setError] = useState('');
     const [apartment, setApartment] = useState(null);
     const [like, setLike] = useState(false);
     const [wishlists, setWishlists] = useState([]);
+    const [wishlisted, setWishlisted] = useState([]);
 
     async function getWishlists() {
         try{
             const { wishlists } = await wishlistService.getWishlist();
+            const allApartmentIds = [];
+
+            // Loop through the list and append the apartment key-value to an array
+            wishlists.forEach(wishlist => {
+                if (Array.isArray(wishlist.apartments) && wishlist.apartments.length) {
+                    wishlist.apartments.forEach(apartment => {
+                        allApartmentIds.push(apartment.id);
+                    });
+                }
+            });
+
+            setWishlisted(allApartmentIds);
             setWishlists(wishlists);
         }catch(error){
-            setError(error?.response?.data?.message || "Something went wrong");
+            console.log(error)
+            toast.error(error?.response?.data?.message || "Something went wrong")
         }
     }
 
@@ -35,7 +50,7 @@ const ApartmentDetails = () => {
             setApartment(data);
         } catch (err) {
             console.log(err);
-            setError(err?.response?.data?.errors || 'Something went wrong');
+            toast.error(err?.response?.data?.errors || 'Something went wrong');
         } finally {
             setLoading(false);
         }
@@ -46,50 +61,47 @@ const ApartmentDetails = () => {
             const {status} = await wishlistService.addApartmentToWishlist(apartmentId, id);
 
             if (status === 200) {
+                toast.success("Apartment added to wishlist");
+                await getWishlists();
                 setLike(false);
             }
         }catch(error){
-            setError(error?.response?.data?.message || "Something went wrong");
+            toast.error(error?.response?.data?.message || "Something went wrong");
         }
 
     }
 
     useEffect(() => {
-        getWishlists();
-    }, [])
-
-    useEffect(() => {
         fetchApartment(apartmentId);
+        getWishlists();
     }, [apartmentId]);
 
     useEffect(() => {
         if (queryParams.has('success')) {
-            setSuccess('Payment has been verified, check your mail for follow up');
-            navigate(location.pathname, { replace: true });
+            toast.success('Payment has been verified, check your mail for follow up');
+            // navigate(location.pathname, { replace: true });
         }
 
         if (queryParams.has('cancel')) {
-            setError('Payment was cancelled. Please try again.');
+            toast.error('Payment was cancelled. Please try again.');
             navigate(location.pathname, { replace: true });
         }
     }, [location.search]);
 
+    const isWishlisted = wishlisted.includes(apartmentId);
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <div className="animate-spin rounded-full h-48 w-48 border-t-2 border-b-2 border-blue-500"></div>
-            </div>
-        );
+            <Spinner />
+        )
     }
 
     return (
         <div>
-            {!apartment && !error && <p>No apartment found.</p>}
-
-            {success && <div className="text-green-600 w-[92%] mx-auto">{success}</div>}
-            {error && <div className="text-red-600 w-[92%] mx-auto">{error}</div>}
-
+            {!apartment && <p>No apartment found.</p>}
+            <ToastContainer
+                pauseOnHover
+            />
             {apartment && (
                 <div className="bg-white p-6 shadow-md rounded-lg max-w-5xl mx-auto mt-4">
                     <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 w-full mb-3"
@@ -112,10 +124,19 @@ const ApartmentDetails = () => {
                         </p>
                         <button
                             onClick={() => setLike(!like)}
-                            className={`text-2xl mr-1 mt-2`}
-                            title="Add apartment to wishlist">
-                            <Heart className="text-blue-500 hover:fill-blue-500" />
+                            disabled={isWishlisted}
+                            className="text-2xl mr-1 mt-2"
+                            title={isWishlisted ? "Apartment already in wishlist" : "Add apartment to wishlist"}>
+                            <Heart
+                                aria-label="Add to wishlist"
+                                className={`transition-all ${
+                                    isWishlisted
+                                        ? 'fill-red-500 text-red-500 cursor-not-allowed'
+                                        : 'fill-blue-500 text-blue-500 hover:fill-transparent hover:text-blue-700 cursor-pointer'
+                                }`}
+                            />
                         </button>
+
                         {wishlists.length > 0 && (
                             <ul className={`${like ? 'block' : 'hidden'} bg-white opacity-100 border-2 border-blue-200 absolute w-[50%] md:w-[25%] rounded-lg right-0 top-2`}>
                                 {wishlists.map((item, i) => (

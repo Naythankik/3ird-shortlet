@@ -2,13 +2,14 @@ import axios from '../api/axios';
 
 class BookingService {
     async createBooking(url, form) {
-        try{
+        try {
             const { data } = await axios.post(url, form);
-            return data;
-        }catch(err){
-            throw err.response?.data || err;
+            return { data };
+        } catch (err) {
+            return { error: err.response?.data || err };
         }
     }
+
 
     async getBookings(url) {
         try{

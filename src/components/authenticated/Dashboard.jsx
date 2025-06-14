@@ -5,10 +5,10 @@ import { MdBeachAccess, MdApartment, MdBusinessCenter } from "react-icons/md";
 import { BiSolidHot } from "react-icons/bi";
 import { GiModernCity } from "react-icons/gi";
 import apartmentService from "../../services/apartmentService.js";
-import spinner from "../Spinner.jsx";
 import SearchBar from "./SearchBar.jsx";
 import 'leaflet/dist/leaflet.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import Spinner from "../Spinner.jsx";
 
 
 const Dashboard = () => {
@@ -78,7 +78,9 @@ const Dashboard = () => {
     }, [activeCategory]);
 
     if (loading) {
-        return spinner.apartmentSpinner();
+        return (
+            <Spinner />
+        )
     }
 
     return (
