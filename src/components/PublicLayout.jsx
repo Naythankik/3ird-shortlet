@@ -1,5 +1,5 @@
-import Header from "./index/Header.jsx";
-import Footer from "./index/Footer.jsx";
+import Header from "../pages/public/Header.jsx";
+import Footer from "../pages/public/Footer.jsx";
 import { Outlet } from "react-router-dom";
 
 function PublicLayout() {

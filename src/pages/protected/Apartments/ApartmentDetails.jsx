@@ -5,7 +5,7 @@ import wishlistService from "../../../services/wishlistService.js";
 import ReviewList from "../ReviewList.jsx";
 import { Heart } from "lucide-react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import Spinner from "../../Spinner.jsx";
+import Spinner from "../../../components/Spinner.jsx";
 import {toast, ToastContainer} from 'react-toastify';
 
 

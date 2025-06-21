@@ -1,4 +1,4 @@
-import spinner from "../Spinner.jsx";
+import spinner from "../../components/Spinner.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import {useState} from "react";
 import authService from "../../services/authService.js";

@@ -3,7 +3,7 @@ import { FaPlus } from "react-icons/fa";
 import wishlistService from "../../../services/wishlistService.js";
 import ViewWishlistModal from "./ViewWishlistModal.jsx";
 import CreateOrUpdateWishlistModal from "./CreateOrUpdateWishlistModal.jsx";
-import NoDataComponent from "../../helpers/NoDataComponent.jsx";
+import NoDataComponent from "../../../components/helpers/NoDataComponent.jsx";
 
 const Wishlist = () => {
     const [wishlists, setWishlists] = useState([]);

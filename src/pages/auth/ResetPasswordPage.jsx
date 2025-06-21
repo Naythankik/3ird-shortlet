@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import authService from "../../services/authService.js";
-import spinner from "../Spinner.jsx";
+import spinner from "../../components/Spinner.jsx";
 import {FaEye, FaEyeSlash} from "react-icons/fa";
 
 const ResetPasswordPage = () => {

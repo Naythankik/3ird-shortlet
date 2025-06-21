@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import bookingService from "../../../services/bookingService.js";
 import { Link } from "react-router-dom";
 import { ArrowUpDown } from "lucide-react";
-import NoDataComponent from "../../helpers/NoDataComponent.jsx";
-import Spinner from "../../Spinner.jsx";
+import NoDataComponent from "../../../components/helpers/NoDataComponent.jsx";
+import Spinner from "../../../components/Spinner.jsx";
 import {toast} from "react-toastify";
 
 const Booking = () => {

@@ -8,7 +8,7 @@ import apartmentService from "../../services/apartmentService.js";
 import SearchBar from "./SearchBar.jsx";
 import 'leaflet/dist/leaflet.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import Spinner from "../Spinner.jsx";
+import Spinner from "../../components/Spinner.jsx";
 
 
 const Dashboard = () => {

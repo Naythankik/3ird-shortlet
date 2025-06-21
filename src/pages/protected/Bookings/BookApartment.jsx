@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import bookingService from "../../../services/bookingService.js";
 import authService from "../../../services/authService.js";
 import { loadStripe } from "@stripe/stripe-js";
-import Spinner from "../../Spinner.jsx";
+import Spinner from "../../../components/Spinner.jsx";
 import {toast, ToastContainer} from "react-toastify";
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 

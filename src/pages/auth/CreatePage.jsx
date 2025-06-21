@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import authService from "../../services/authService.js";
-import spinner from "../Spinner.jsx";
+import spinner from "../../components/Spinner.jsx";
 
 const LoginPage = () => {
     const navigate = useNavigate();
