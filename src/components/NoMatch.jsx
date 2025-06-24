@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
+import ErrorImage from '../assets/404.png'
 
 const NoMatch = () => {
     return (
         <div className="bg-white min-h-screen flex flex-col md:flex-row items-center justify-center md:justify-evenly p-6 text-center">
             <div className="w-[60%] md:w-[30%]">
-                <img src="/src/assets/404.png" alt="404 Not Found" className="w-full h-auto" />
+                <img src={ErrorImage} alt="404 Not Found" className="w-full h-auto" />
             </div>
             <div className="flex flex-col items-center gap-4 mt-6 md:mt-0">
                 <h1 className="text-5xl font-bold text-red-600">404</h1>
