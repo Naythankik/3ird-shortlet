@@ -8,7 +8,7 @@ const RoomRatesSection = () => {
                 Our Rooms & Rates
             </h2>
 
-            <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 px-6 py-4"
+            <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 px-2 md:px-6 py-4"
                  style={{ scrollbarWidth: "none" }}>
                 {ApartmentList.map((apartment, index) => (
                     <ArticleSection

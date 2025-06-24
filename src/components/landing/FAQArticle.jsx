@@ -11,7 +11,7 @@ const FAQArticle = ({articles}) => {
         const isOpen = seeAnswer === index;
 
         return (
-            <button key={index} className="w-full rounded-lg p-5 bg-white shadow" onClick={() => toggleOptions(index)}>
+            <button key={index} className="w-full bg-white rounded-lg p-5 shadow" onClick={() => toggleOptions(index)}>
                 <p className="flex items-center justify-between">
                     {article.question}
                     {isOpen ? <FaCaretUp /> : <FaCaretDown />}

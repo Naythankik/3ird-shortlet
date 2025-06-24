@@ -10,7 +10,7 @@ const HeroSection = () => {
                 </h1>
                 <p className="text-gray-700 text-base md:text-xl">
                     Discover stylish, fully-furnished shortlet spaces perfect for business trips,
-                    vacations, or weekend getaways — available in top Nigerian cities at rates you’ll love.
+                    vacations, or weekend getaways available in top Nigerian cities at rates you’ll love.
                 </p>
                 <Link
                     to="/login"

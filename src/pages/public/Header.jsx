@@ -48,7 +48,7 @@ const Header = () => {
         current === path ? 'text-blue-700 font-bold' : 'hover:text-blue-500 active:text-orange-400';
 
     return (
-        <header className="flex sticky top-0 bg-white justify-between px-10 py-7 border-b border-blue-500 uppercase">
+        <header className="flex sticky top-0 bg-white justify-between px-4 md:px-10 py-3 md:py-7 border-b border-blue-500 uppercase">
             <Link to="/" className="text-base md:text-2xl font-extrabold text-blue-500 flex items-center gap-2">
                 <FaHome />3ird-shortlet
             </Link>

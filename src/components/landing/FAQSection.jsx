@@ -4,7 +4,7 @@ import FAQ from "../../assets/faq.webp";
 
 const FAQSection = () => {
     return (
-        <section id="faq" className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
+        <section id="faq" className="flex flex-col-reverse md:flex-row items-center justify-between md:px-20 py-6 md:py-16 gap-4 md:gap-10">
 
             <div className="md:w-1/2 text-center space-y-6 md:space-y-8 w-[90%] mx-auto">
                 <h1 className="text-xl md:tex-3xl lg:text-5xl font-bold leading-tight text-blue-800 uppercase">
@@ -15,7 +15,7 @@ const FAQSection = () => {
                 </div>
             </div>
 
-            <div className="w-full md:w-1/2 flex justify-center">
+            <div className="w-[90%] md:w-1/2 flex justify-center">
                 <img
                     src={FAQ}
                     alt="Apartment view"
