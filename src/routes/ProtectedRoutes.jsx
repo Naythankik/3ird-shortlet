@@ -1,10 +1,11 @@
 import Dashboard from "../pages/protected/Dashboard.jsx";
 import Apartment from "../pages/protected/Apartments/Apartment.jsx";
-import Booking from "../pages/protected/Bookings/Booking.jsx";
 import Wishlist from "../pages/protected/Wishlists/Wishlist.jsx";
 import ApartmentDetails from "../pages/protected/Apartments/ApartmentDetails.jsx";
 import BookApartment from "../pages/protected/Bookings/BookApartment.jsx";
 import AuthGuard from "../components/guards/AuthGuard.jsx";
+import Booking from "../pages/protected/Bookings/Booking.jsx";
+import BookingDetails from "../pages/protected/Bookings/BookingDetails.jsx";
 
 const ProtectedRoutes =
     [
@@ -19,6 +20,10 @@ const ProtectedRoutes =
         {
             path: '/bookings',
             element: <AuthGuard element={<Booking />} isAuthRequired={true} />
+        },
+        {
+            path: '/bookings/:bookingId',
+            element: <AuthGuard element={<BookingDetails />} isAuthRequired={true} />
         },
         {
             path: '/wishlists',

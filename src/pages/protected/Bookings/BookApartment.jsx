@@ -150,7 +150,7 @@ const BookApartment = () => {
                         value={formData.paymentDescription}
                         onChange={handleChange}
                         className="w-full p-2 border-2 focus-visible:outline-blue-500 rounded-lg px-3 py-2"
-                        placeholder="e.g., Booking for 3 nights"
+                        placeholder="e.g., OldBooking for 3 nights"
                     />
                 </div>
 
