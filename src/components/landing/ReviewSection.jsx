@@ -8,7 +8,7 @@ const ReviewSection = () => {
             </h2>
             <div className="w-full flex flex-nowrap overflow-x-scroll justify-evenly gap-6 md:px-6 py-4" style={{scrollbarWidth: 'none'}}>
                 {Reviews.map((review, index) => (
-                    <article key={index} className="p-4 border rounded-lg shadow-sm bg-white min-w-96">
+                    <article key={index} className="p-4 border rounded-lg shadow-sm min-w-72 md:min-w-96">
                         <h3 className="text-base md:text-xl font-semibold text-blue-500">{review.name}</h3>
                         <div className="flex justify-between items-center mt-2">
                             <span className="text-sm md:text-base text-gray-500">{review.apartment}</span>
