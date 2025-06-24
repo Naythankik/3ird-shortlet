@@ -5,7 +5,7 @@ const AmenitySection = () =>  {
         <section
             className="flex flex-col items-center justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
             <h2 className="w-full md:w-2/5 text-center text-wrap text-lg md:text-2xl font-bold leading-tight text-blue-800 uppercase">
-                Our The Top Notch Amenities you get when you book today
+                The Top Notch Amenities you get when you book today
             </h2>
             <div className="flex flex-wrap justify-evenly gap-6 md:px-6 py-4">
                 {Amenities.map((amenity, index) => (
