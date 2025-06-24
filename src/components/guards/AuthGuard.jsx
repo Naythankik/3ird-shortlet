@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import AuthService from "../services/authService.js";
+import AuthService from "../../services/authService.js";
 import { Navigate } from "react-router-dom";
 
 const AuthGuard = ({ element, isAuthRequired }) => {

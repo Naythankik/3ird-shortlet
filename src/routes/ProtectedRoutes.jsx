@@ -4,10 +4,10 @@ import Booking from "../pages/protected/Bookings/Booking.jsx";
 import Wishlist from "../pages/protected/Wishlists/Wishlist.jsx";
 import ApartmentDetails from "../pages/protected/Apartments/ApartmentDetails.jsx";
 import BookApartment from "../pages/protected/Bookings/BookApartment.jsx";
-import AuthGuard from "../components/AuthGuard.jsx";
+import AuthGuard from "../components/guards/AuthGuard.jsx";
 
-const ProtectedRoutes = () => {
-    return [
+const ProtectedRoutes =
+    [
         {
             path: '/dashboard',
             element: <AuthGuard element={<Dashboard />} isAuthRequired={true} />
@@ -30,9 +30,7 @@ const ProtectedRoutes = () => {
         },
         {
             path: '/apartment/:apartmentId/book/:name',
-            element: <AuthGuard element={<BookApartment />} isAuthRequired={true} />
-        },
+            element: <AuthGuard element={<BookApartment/>} isAuthRequired={true}/>
+        }
     ]
-}
-
 export default ProtectedRoutes;

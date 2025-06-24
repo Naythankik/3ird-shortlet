@@ -1,26 +1,4 @@
-const blogPosts = [
-    {
-        id: 1,
-        title: "Top 5 Shortlet Apartments in Lagos for Business Travelers",
-        excerpt: "Discover the best shortlet apartments in Lagos that combine luxury, convenience, and proximity to major business hubs.",
-        image: "https://source.unsplash.com/featured/?apartment,lagos",
-        date: "April 15, 2025",
-    },
-    {
-        id: 2,
-        title: "Why Shortlets Are the Future of Travel Accommodation in Nigeria",
-        excerpt: "Explore the rise of shortlet apartments and why more travelers are choosing them over traditional hotels.",
-        image: "https://source.unsplash.com/featured/?apartment,nigeria",
-        date: "March 30, 2025",
-    },
-    {
-        id: 3,
-        title: "How to Choose the Perfect Shortlet for Your Next Stay",
-        excerpt: "Looking for a comfortable, stylish space for your trip? Here's a guide to picking the perfect shortlet apartment.",
-        image: "https://source.unsplash.com/featured/?interior,home",
-        date: "March 18, 2025",
-    },
-];
+import blogPosts from "../../data/blogs.jsx";
 
 const BlogsPage = () => {
     return (

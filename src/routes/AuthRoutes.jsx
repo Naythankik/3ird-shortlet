@@ -9,10 +9,10 @@ import CreatePage from "../pages/auth/CreatePage.jsx";
 import VerifyAccountPage from "../pages/auth/VerifyAccountPage.jsx";
 import ForgetPasswordPage from "../pages/auth/ForgetPasswordPage.jsx";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage.jsx";
-import AuthGuard from "../components/AuthGuard.jsx";
+import AuthGuard from "../components/guards/AuthGuard.jsx";
 
-const AuthRoutes = () => {
-    return  [
+const AuthRoutes =
+    [
         {
             path: "/",
             element: <LandingPage />
@@ -56,8 +56,7 @@ const AuthRoutes = () => {
         {
             path: '/reset-password/:token',
             element: <AuthGuard element={<ResetPasswordPage />} isAuthRequired={false} />
-        },
+        }
     ]
-}
 
 export default AuthRoutes;
