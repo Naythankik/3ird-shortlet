@@ -26,7 +26,7 @@ class BookingService {
             const { data } = await axios.get(url);
             return data;
         }catch(err){
-            throw err.response?.data || err;
+            return { error: err };
         }
     }
 }

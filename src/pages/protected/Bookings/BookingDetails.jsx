@@ -2,40 +2,111 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import bookingService from "../../../services/bookingService.js";
 import Spinner from "../../../components/Spinner.jsx";
+import {toast, ToastContainer} from "react-toastify";
+import { jsPDF } from "jspdf";
 
 const BookingDetails = () => {
     const { bookingId } = useParams();
     const [booking, setBooking] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchBooking = async () => {
-            const { booking } = await bookingService.getBooking(bookingId);
-            console.log(booking)
-            setBooking(booking)
-        };
+    const downloadInvoice = () => {
+        const doc = new jsPDF();
 
-        fetchBooking();
-    }, [bookingId]);
+        // Title
+        doc.setFontSize(20);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(40, 40, 40);
+        doc.text("3ird Shortlet - Booking Invoice", 20, 25);
 
-    if (!booking) return <Spinner />;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.setTextColor(80, 80, 80);
+
+        // Booking Info
+        doc.text(`Booking ID: ${booking.id}`, 20, 45);
+        doc.text(`Apartment: ${booking.apartment.name.slice(0, 40)}`, 20, 55);
+        doc.text(`Check In: ${formatDate(booking.checkInDate)}`, 20, 65);
+        doc.text(`Check Out: ${formatDate(booking.checkOutDate)}`, 20, 75);
+        doc.text(`Guests: ${booking.guests.toLocaleString()}`, 20, 85);
+
+        const formattedPrice = new Intl.NumberFormat("en-US", {
+            style: "currency", currency: "USD"
+        }).format(booking.totalPrice);
+
+        doc.text(`Total Price: ${formattedPrice}`, 20, 95);
+        doc.text(`Payment Status: ${booking.paymentStatus.toUpperCase()}`, 20, 105);
+        doc.text(`Booking Status: ${booking.bookingStatus.toUpperCase()}`, 20, 115);
+
+        // Special Requests
+        if (booking.specialRequests) {
+            doc.text("Special Requests:", 20, 130);
+            doc.setFontSize(10);
+            const requests = doc.splitTextToSize(booking.specialRequests.slice(0, 300), 170);
+            doc.text(requests, 20, 140);
+        }
+
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(120);
+        doc.text("Thank you for booking with 3ird Shortlet!", 20, 280);
+        doc.text("Visit us: www.3irdshortlet.ng", 20, 287);
+
+        // Save as PDF
+        doc.save(`invoice_${booking.apartment.name}_3ird-shortlet_${booking.apartment.id}.pdf`);
+    };
+
+    const fetchBooking = async () => {
+        setLoading(true);
+
+        try {
+            const { booking, error } = await bookingService.getBooking(bookingId);
+
+            if (error?.status === 422) {
+                const message = error.response?.data?.message || "Unauthorized access to booking.";
+                toast.error(message);
+                return;
+            }
+
+            if (booking) {
+                setBooking(booking);
+            } else {
+                toast.error("Booking not found.");
+            }
+
+        } catch (e) {
+            // Catch any unexpected error (network, internal server, etc.)
+            const message = e.response?.data?.message || e.message || "Something went wrong";
+            toast.error(message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString();
 
+    useEffect(() => {
+        fetchBooking();
+    }, [bookingId]);
+
+    if (loading) return <Spinner />;
+
     return (
-        <div className="max-w-5xl mx-auto px-6 py-10 text-blue-500">
-            <h1 className="text-3xl font-bold mb-4">Booking Details</h1>
+        <div className="max-w-5xl mx-auto px-2 md:px-6 py-3 md:py-10 text-blue-500">
+            <ToastContainer />
+            <h1 className="text-lg md:text-3xl font-bold mb-4">Booking Details</h1>
 
             {/* Apartment Images */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                {booking.apartment.images.map((img, index) => (
+                {booking?.apartment?.images.map((img, index) => (
                     <img key={index} src={img} alt={`Apartment Image ${index + 1}`} className="rounded-lg h-48 object-cover w-full" />
                 ))}
             </div>
 
             {/* Apartment Info */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-8 space-y-4">
-                <h2 className="text-xl font-semibold">{booking.apartment.name}</h2>
-                <p className="text-gray-600">{booking.apartment.description.slice(0, 300)}...</p>
+                <h2 className="text-xl font-semibold">{booking?.apartment?.name}</h2>
+                <p className="text-gray-600">{booking?.apartment?.description.slice(0, 300)}...</p>
             </div>
 
             {/* Booking Summary */}
@@ -43,52 +114,47 @@ const BookingDetails = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <p className="text-sm text-gray-500">Booking ID</p>
-                        <p className="text-xs sm:text-base font-medium">{booking.id}</p>
+                        <p className="text-xs sm:text-base font-medium">{booking?.id}</p>
                     </div>
                     <div>
                         <p className="text-sm text-gray-500">Guests</p>
-                        <p className="font-medium">{booking.guests.toLocaleString()}</p>
+                        <p className="font-medium">{booking?.guests.toLocaleString()}</p>
                     </div>
                     <div>
                         <p className="text-sm text-gray-500">Check-In</p>
-                        <p className="font-medium">{formatDate(booking.checkInDate)}</p>
+                        <p className="font-medium">{formatDate(booking?.checkInDate)}</p>
                     </div>
                     <div>
                         <p className="text-sm text-gray-500">Check-Out</p>
-                        <p className="font-medium">{formatDate(booking.checkOutDate)}</p>
+                        <p className="font-medium">{formatDate(booking?.checkOutDate)}</p>
                     </div>
                     <div>
                         <p className="text-sm text-gray-500">Total Price</p>
-                        <p className="font-medium text-blue-600">$ {booking.totalPrice.toLocaleString()}</p>
+                        <p className="font-medium text-blue-600">$ {booking?.totalPrice.toLocaleString()}</p>
                     </div>
                     <div>
                         <p className="text-sm text-gray-500">Payment Status</p>
-                        <p className={`font-medium capitalize ${booking.paymentStatus === "paid" ? "text-green-600" : "text-red-600"}`}>
-                            {booking.paymentStatus}
+                        <p className={`font-medium capitalize ${booking?.paymentStatus === "paid" ? "text-green-600" : "text-red-600"}`}>
+                            {booking?.paymentStatus}
                         </p>
                     </div>
                     <div>
                         <p className="text-sm text-gray-500">Booking Status</p>
-                        <p className={`font-medium capitalize ${booking.bookingStatus === "completed" ? "text-green-600" : "text-yellow-600"}`}>
-                            {booking.bookingStatus}
+                        <p className={`font-medium capitalize ${booking?.bookingStatus === "completed" ? "text-green-600" : "text-yellow-600"}`}>
+                            {booking?.bookingStatus}
                         </p>
                     </div>
                 </div>
 
                 {/* Special Requests */}
-                {booking.specialRequests && (
+                {booking?.specialRequests && (
                     <div>
                         <p className="text-sm text-gray-500 mt-4">Special Requests</p>
-                        <p className="text-gray-700">{booking.specialRequests.slice(0, 300)}...</p>
+                        <p className="text-gray-700">{booking?.specialRequests.slice(0, 300)}...</p>
                     </div>
                 )}
             </div>
-
-            {/* Actions */}
-            <div className="mt-6 flex gap-4">
-                <button className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Back</button>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Download Invoice</button>
-            </div>
+             <button onClick={downloadInvoice} className="mt-5 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Download Invoice</button>
         </div>
     );
 };

@@ -3,6 +3,7 @@ import bookingService from "../../../services/bookingService.js";
 import Spinner from "../../../components/Spinner.jsx";
 import NoDataComponent from "../../../components/helpers/NoDataComponent.jsx";
 import {useNavigate} from "react-router-dom";
+import {toast, ToastContainer} from "react-toastify";
 
 const Booking = () => {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Booking = () => {
             const { booking } = await bookingService.getBookings('/bookings/read');
             setBookings(booking);
         } catch (err) {
+            toast.error(err.message)
             console.log(err.message);
         } finally {
             setLoading(false);
@@ -50,15 +52,16 @@ const Booking = () => {
     }
 
     return <div className="flex flex-col gap-4 mt-5">
+        <ToastContainer />
         {bookings.length > 0 ?
             bookings.map((booking, i) => (
             <article key={i} className="border-2 border-gray-300 p-3 rounded-xl grid md:grid-cols-[4fr_1fr] justify-between">
                 <div className="flex gap-5">
-                    <img src={booking.apartment.images[0]} alt={booking.apartment.name} className="rounded-xl w-[200px] h-[180px] object-cover" />
+                    <img src={booking?.apartment?.images[0]} alt={booking?.apartment?.name} className="rounded-xl w-[200px] h-[180px] object-cover" />
                     <div className="flex justify-between flex-col pt-4 w-full md:w-3/5">
                         <div className="flex flex-col gap-1">
-                            <p className="font-semibold text-slate-700 text-lg">{booking.apartment.name}</p>
-                            <p className="font-medium text-slate-700 text-base">{`${booking.apartment.address.city}, ${booking.apartment.address.country}`}</p>
+                            <p className="font-semibold text-slate-700 text-lg">{booking?.apartment?.name}</p>
+                            <p className="font-medium text-slate-700 text-base">{`${booking?.apartment?.address?.city}, ${booking?.apartment?.address?.country}`}</p>
                         </div>
                         <div className="flex flex-row gap-5">
                             <button
