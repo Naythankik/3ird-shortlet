@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import ImageCarousel from "../ImageCarousel.jsx";
+import ImageCarousel from "../pages/protected/ImageCarousel.jsx";
 
 const ApartmentComponent = ({ apartment }) => {
 

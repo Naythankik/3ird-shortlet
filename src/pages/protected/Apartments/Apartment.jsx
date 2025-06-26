@@ -1,7 +1,7 @@
 import apartmentService from "../../../services/apartmentService.js";
 import {useState, useEffect, useCallback} from "react";
 import { debounce } from "lodash";
-import ApartmentComponent from "./ApartmentComponent.jsx";
+import ApartmentComponent from "../../../components/ApartmentComponent.jsx";
 import NoDataComponent from "../../../components/helpers/NoDataComponent.jsx";
 import Spinner from "../../../components/Spinner.jsx";
 

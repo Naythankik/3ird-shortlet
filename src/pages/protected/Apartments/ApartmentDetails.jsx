@@ -27,13 +27,13 @@ const ApartmentDetails = () => {
             const allApartmentIds = [];
 
             // Loop through the list and append the apartment key-value to an array
-            wishlists.forEach(wishlist => {
-                if (Array.isArray(wishlist.apartments) && wishlist.apartments.length) {
-                    wishlist.apartments.forEach(apartment => {
-                        allApartmentIds.push(apartment.id);
-                    });
-                }
-            });
+            // wishlists.forEach(wishlist => {
+            //     if (Array.isArray(wishlist.apartments) && wishlist.apartments.length) {
+            //         wishlist.apartments.forEach(apartment => {
+            //             allApartmentIds.push(apartment.id);
+            //         });
+            //     }
+            // });
 
             setWishlisted(allApartmentIds);
             setWishlists(wishlists);
@@ -168,7 +168,7 @@ const ApartmentDetails = () => {
                         <ul className="list-disc pl-5 text-gray-700 space-y-1">
                             {apartment.properties?.map((property, i) => (
                                 <li key={i} className="leading-snug">
-                                    <span className="text-justify">{property}</span>
+                                    <span className="text-justify capitalize">{property.name}</span>
                                 </li>
                             ))}
                         </ul>

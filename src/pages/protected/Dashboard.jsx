@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaSwimmingPool } from "react-icons/fa";
-import { MdBeachAccess, MdApartment, MdBusinessCenter } from "react-icons/md";
+import {MdBeachAccess, MdApartment, MdBusinessCenter } from "react-icons/md";
 import { BiSolidHot } from "react-icons/bi";
 import { GiModernCity } from "react-icons/gi";
 import apartmentService from "../../services/apartmentService.js";
@@ -8,12 +8,8 @@ import SearchBar from "./SearchBar.jsx";
 import 'leaflet/dist/leaflet.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Spinner from "../../components/Spinner.jsx";
-
-import Image from '../../assets/random-img-1.png'
+import {Link} from "react-router-dom";
 import ApartmentCard from "../../components/ApartmentCard.jsx";
-import ApartmentList from "../../components/landing/ApartmentList.jsx";
-import ArticleSection from "../../components/landing/ArticleSection.jsx";
-
 
 const Dashboard = () => {
     // State management
@@ -66,9 +62,7 @@ const Dashboard = () => {
     const fetchApartments = async () => {
         try {
             setLoading(true);
-            const { apartments: data } = await apartmentService.getApartments(
-                `/apartments/read?page=1&limit=20&category` // =${activeCategory}`
-            );
+            const { data } = await apartmentService.getApartments('/user/dashboard');
             setApartments(data);
         } catch (err) {
             console.error('Error fetching apartments:', err);
@@ -79,7 +73,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         fetchApartments();
-    }, [activeCategory]);
+    }, []);
 
     if (loading) {
         return (
@@ -115,7 +109,7 @@ const Dashboard = () => {
             </div>
 
             <section className="w-full my-5">
-                <h2 className="text-2xl md:text-3xl font-bold text-blue-500 mb-3">Explore by Category</h2>
+                <h2 className="text-lg md:text-2xl font-bold text-blue-500 mb-3">Explore by Category</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     {categories.map((category) => (
                         <button
@@ -139,54 +133,56 @@ const Dashboard = () => {
                 </div>
             </section>
 
-            {/*Overview*/}
-            <section className="flex flex-col justify-between px-6 md:px-20 py-6 md:py-16 gap-4 md:gap-10">
-                <h2 className="text-2xl md:text-3xl font-bold text-blue-500 mb-2">Overview</h2>
-
-
-                    <div className="flex flex-nowrap overflow-x-scroll justify-evenly gap-6 px-6 py-4" style={{ scrollbarWidth: "none" }}>
-                        {ApartmentList.map((apartment, index) => (
-                            <ArticleSection
-                                key={index}
-                                title={apartment.title}
-                                description={apartment.description}
-                                image={apartment.image}
-                                price={apartment.price}
-                            />
-                        ))}
-                    </div>
-                {/*</section>*/}
-
-                <div className="hidden flex-col gap-5">
-                    <p className="text-blue-400 font-semibold text-lg">Upcoming Bookings</p>
-                    <div className="flex flex-nowrap gap-4 bg-red-400 w-full overflow-x-scroll">
-                        {[1,2,3,4,5].map((_, i) => (
-                            <ApartmentCard key={i} date="May 20 - May 25, 2024" image={Image} location="Los Angeles" />
-                        ))}
-                    </div>
-
+            {/*Luxury listings*/}
+            <section id="listings" className="w-full my-5 text-blue-500">
+                <div className="flex justify-between flex-wrap items-center mb-2">
+                    <h2 className="text-lg md:text-2xl font-bold text-blue-500">Luxury Listings</h2>
+                    <Link to='#' className="hover:underline">View more</Link>
                 </div>
-
-                {/* Saved Apartments */}
-                <div className="hidden">
-                    <p className="text-blue-400 font-semibold text-lg">Saved Apartments</p>
-                    <div className="flex flex-nowrap gap-4 max-w-full overflow-x-scroll" style={{ scrollBehaviour: 'smooth', scrollBarWidth: 'none'}}>
-                        {[1, 2, 3, 4, 5].map((_, i) => (
-                            <ApartmentCard key={i} image={Image} date="Jan 10 - Jan 14, 2024" location="Miami, FL" />
-                        ))}
-                    </div>
+                <div className="flex justify-between flex-wrap">
+                    {apartments.luxuryListing.map((luxury, index) => (
+                        <ApartmentCard key={index} props={luxury} />))
+                    }
                 </div>
+            </section>
 
-                {/* Booking History */}
-                <div className="mt-8 hidden">
-                    <p className="text-blue-400 font-semibold text-lg">Booking History</p>
-                    <div className="flex flex-nowrap gap-4 max-w-full overflow-x-scroll">
-                        {[1, 2].map((_, i) => (
-                            <ApartmentCard key={i} image={Image} date="Jan 10 - Jan 14, 2024" location="Miami, FL" />
-                        ))}
-                    </div>
+            {/*popular listings*/}
+            <section className="w-full my-5 text-blue-500">
+                <div className="flex justify-between flex-wrap items-center mb-2">
+                    <h2 className="text-lg md:text-2xl font-bold text-blue-500">Popular Listings</h2>
+                    <Link to='#' className="hover:underline">View more</Link>
                 </div>
+                <div className="flex justify-between flex-wrap">
+                    {apartments.popularListings.map((popular, index) => (
+                        <ApartmentCard key={index} props={popular} />))
+                    }
+                </div>
+            </section>
 
+            {/*Special offers*/}
+            <section className="w-full my-5 text-blue-500">
+                <div className="flex justify-between flex-wrap items-center mb-2">
+                    <h2 className="text-lg md:text-2xl font-bold text-blue-500">Special Offer</h2>
+                    <Link to='#' className="hover:underline">View more</Link>
+                </div>
+                <div className="flex justify-between flex-wrap">
+                    {apartments.specialOffers.map((specialOffer, index) => (
+                        <ApartmentCard key={index} props={specialOffer} />))
+                    }
+                </div>
+            </section>
+
+            {/*rare listings*/}
+            <section className="w-full my-5 text-blue-500">
+                <div className="flex justify-between flex-wrap items-center mb-2">
+                    <h2 className="text-lg md:text-2xl font-bold text-blue-500">Rare Listings</h2>
+                    <Link to='#' className="hover:underline">View more</Link>
+                </div>
+                <div className="flex justify-between flex-wrap">
+                    {apartments.rareListings.map((specialOffer, index) => (
+                        <ApartmentCard key={index} props={specialOffer} />))
+                    }
+                </div>
             </section>
 
         </div>

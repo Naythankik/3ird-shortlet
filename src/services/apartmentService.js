@@ -10,8 +10,6 @@ class ApartmentService {
             if(err.status === 401){
                 console.log(err)
                 return err
-                // authService.logout()
-                // window.location.reload();
             }
             throw new Error(err.message);
         }
