@@ -5,9 +5,9 @@ import {Link} from "react-router-dom";
 
 const ApartmentCard = ({props}) => {
     return (
-        <article className="w-full md:w-auto border-2 bordero-gray-100 mb-5 rounded-xl">
+        <article className="w-full md:w-auto border-2 bordero-gray-100 rounded-xl">
             <Link to={`/apartment/${props.id}`} className="w-full h-full">
-                <div className="w-full md:w-96 h-56">
+                <div className="w-full h-56">
                     <img src={props?.images[0]} alt={props?.name} className="w-full h-full rounded-t-lg object-cover" />
                 </div>
                 <div className="p-4 flex flex-col gap-2">

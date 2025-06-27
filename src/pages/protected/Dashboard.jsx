@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSwimmingPool } from "react-icons/fa";
 import {MdBeachAccess, MdApartment, MdBusinessCenter } from "react-icons/md";
 import { BiSolidHot } from "react-icons/bi";
@@ -139,7 +139,7 @@ const Dashboard = () => {
                     <h2 className="text-lg md:text-2xl font-bold text-blue-500">Luxury Listings</h2>
                     <Link to='#' className="hover:underline">View more</Link>
                 </div>
-                <div className="flex justify-between flex-wrap">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                     {apartments.luxuryListing.map((luxury, index) => (
                         <ApartmentCard key={index} props={luxury} />))
                     }
@@ -152,7 +152,7 @@ const Dashboard = () => {
                     <h2 className="text-lg md:text-2xl font-bold text-blue-500">Popular Listings</h2>
                     <Link to='#' className="hover:underline">View more</Link>
                 </div>
-                <div className="flex justify-between flex-wrap">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                     {apartments.popularListings.map((popular, index) => (
                         <ApartmentCard key={index} props={popular} />))
                     }
@@ -165,7 +165,7 @@ const Dashboard = () => {
                     <h2 className="text-lg md:text-2xl font-bold text-blue-500">Special Offer</h2>
                     <Link to='#' className="hover:underline">View more</Link>
                 </div>
-                <div className="flex justify-between flex-wrap">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                     {apartments.specialOffers.map((specialOffer, index) => (
                         <ApartmentCard key={index} props={specialOffer} />))
                     }
@@ -178,7 +178,7 @@ const Dashboard = () => {
                     <h2 className="text-lg md:text-2xl font-bold text-blue-500">Rare Listings</h2>
                     <Link to='#' className="hover:underline">View more</Link>
                 </div>
-                <div className="flex justify-between flex-wrap">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                     {apartments.rareListings.map((specialOffer, index) => (
                         <ApartmentCard key={index} props={specialOffer} />))
                     }
