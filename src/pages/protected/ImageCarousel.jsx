@@ -18,12 +18,12 @@ const ImageCarousel = ({ images, name, interval = 4000 }) => {
     }, [totalImages, interval]);
 
     return (
-        <div className="relative w-full h-72 md:h-40 overflow-hidden rounded-lg mb-3">
+        <div className="relative w-full h-72 overflow-hidden rounded-lg mb-3">
             {/* Image */}
             <img
                 src={images[currentImageIndex]}
                 alt={`${name} image`}
-                className="w-full h-72 md:h-40 object-cover transition-opacity duration-300"
+                className="w-full h-72 object-cover transition-opacity duration-300"
                 loading="lazy"
             />
 

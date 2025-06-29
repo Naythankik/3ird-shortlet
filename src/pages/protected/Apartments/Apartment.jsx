@@ -1,9 +1,10 @@
 import apartmentService from "../../../services/apartmentService.js";
-import {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import { debounce } from "lodash";
 import ApartmentComponent from "../../../components/ApartmentComponent.jsx";
 import NoDataComponent from "../../../components/helpers/NoDataComponent.jsx";
 import Spinner from "../../../components/Spinner.jsx";
+import {toast, ToastContainer} from "react-toastify";
 
 const Apartment = () => {
     const [apartments, setApartments] = useState([]);
@@ -11,7 +12,6 @@ const Apartment = () => {
     const [showSpinner, setShowSpinner] = useState(true);
     const [search, setSearch] = useState('')
     const [sortBy, setSortBy] = useState("");
-    const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -34,10 +34,9 @@ const Apartment = () => {
                 const { apartments: data, pagination } = await apartmentService.getApartments(url);
 
                 setApartments(data);
-                setError(null)
                 setPagination(pagination);
             } catch (err) {
-                setError(err.message || 'Failed to fetch apartments');
+                toast.error(err.message || 'Failed to fetch apartments');
                 console.log(err.message);
             } finally {
                 setLoading(false);
@@ -45,7 +44,6 @@ const Apartment = () => {
             }
         }
     );
-
 
     useEffect(() => {
         const debouncedFetch = debounce(() => {
@@ -81,20 +79,21 @@ const Apartment = () => {
     }
 
     return (
-        <div className="mt-16 bg-transparent">
+        <div className="mt-8 bg-transparent">
+            <ToastContainer />
             {/*The search and filter block*/}
             { apartments.length > 0 &&
-                <div className="w-full my-5 flex justify-between">
+                <div className="w-full my-5 grid grid-cols-1 md:flex md:justify-between gap-2 md:gap-0">
                     <input
                         type="text"
                         value={search}
                         onChange={handleSearch}
                         placeholder="Search for an apartment"
-                        className="border-2 focus-visible:outline-blue-500 text-blue-500 rounded-lg py-1 px-3 w-1/3 placeholder-blue-500 border-blue-500"
+                        className="border-2 focus-visible:outline-blue-500 text-blue-500 rounded-lg py-1 px-3 w-full md:w-1/3 placeholder-blue-500 border-blue-500"
                     />
 
                     <select
-                        className="border-2 focus-visible:outline-blue-500 text-blue-500 rounded-lg py-1 px-3 w-1/3 placeholder-blue-500 border-blue-500 bg-transparent"
+                        className="border-2 focus-visible:outline-blue-500 text-blue-500 rounded-lg py-1 px-3 w-full md:w-1/3 placeholder-blue-500 border-blue-500 bg-transparent"
                         value={sortBy}
                         onChange={handleSort}
                     >
@@ -107,17 +106,9 @@ const Apartment = () => {
                     </select>
                 </div>
             }
-            {/*Display error message*/}
-            {error && (
-                <div className="text-red-500 text-center my-4">
-                    {error}
-                </div>
-            )}
+
             { apartments.length > 0 ?
-                <div className={`text-blue-500 flex flex-wrap justify-evenly gap-6 transition-opacity duration-500 ${
-                        loading ? 'opacity-0' : 'opacity-100'
-                    }`}
-                >
+                <div className="text-blue-500 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full gap-4">
                     {
                         apartments.map((apartment, index) => (
                             <ApartmentComponent key={index} apartment={apartment} />
@@ -140,9 +131,10 @@ const Apartment = () => {
                         </li>
                         <div className="flex gap-4">
                             {Array.from({ length: pagination.totalPages }, (_, i) => (
+                                // Check the pagination to make it more width-friendly
                                 <li
                                     key={i}
-                                    className={`cursor-pointer flex justify-center items-center w-7 h-7 text-base hover:bg-blue-100 rounded-full ${pagination.currentPage === i + 1 ? 'bg-blue-100 rounded-full' : ''}`}
+                                    className={`cursor-pointer hidden justify-center items-center w-7 h-7 text-base hover:bg-blue-100 rounded-full ${pagination.currentPage === i + 1 ? 'bg-blue-100 rounded-full' : ''}`}
                                     onClick={() => handlePageClick(i + 1)}
                                 >
                                     {i + 1}
