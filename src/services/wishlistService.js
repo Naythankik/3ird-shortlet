@@ -14,59 +14,18 @@ class WishlistService {
         }
     }
 
-    async getWishlistById(id) {
+
+    async addApartmentToWishlist(apartmentId) {
         try{
-            return await axios.get(`wishlists/${id}`);
+            return await axios.post(`wishlists/${apartmentId}`);
         }catch (e) {
             return this.handleError(e)
         }
     }
 
-    async createWishlist(payload) {
+    async deleteAnApartment(apartmentId){
         try{
-            return await axios.post(`wishlists`, payload);
-        }catch (e) {
-            return this.handleError(e)
-        }
-    }
-
-    async addApartmentToWishlist(apartmentId, wishlistId) {
-        try{
-            return await axios.post(`wishlists/${wishlistId}/apartments/${apartmentId}`);
-        }catch (e) {
-            return this.handleError(e)
-        }
-    }
-
-    async getAWishlist(wishlistId){
-        try{
-            const response = await axios.get(`wishlists/${wishlistId}`);
-            return response.data;
-        }catch (e) {
-            return this.handleError(e)
-        }
-    }
-
-    async deleteAWishlist(wishlistId){
-        try{
-            const response = await axios.delete(`wishlists/${wishlistId}`);
-            return response.data;
-        }catch (e) {
-            return this.handleError(e)
-        }
-    }
-
-    async updateAWishlist(wishlistId, payload){
-        try{
-            return await axios.put(`wishlists/${wishlistId}`, payload);
-        }catch (e) {
-            return this.handleError(e)
-        }
-    }
-
-    async deleteAnApartment(wishlist, apartment){
-        try{
-            return await axios.delete(`wishlists/${wishlist}/apartments/${apartment}`);
+            return await axios.delete(`wishlists/${apartmentId}`);
         }catch (e) {
             return this.handleError(e)
         }

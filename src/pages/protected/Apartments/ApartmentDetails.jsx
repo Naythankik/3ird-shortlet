@@ -30,53 +30,12 @@ const ApartmentDetails = () => {
     const [apartment, setApartment] = useState(null);
     const [wishlistIds, setWishlistIds] = useState([]);
 
-    const [like, setLike] = useState(false);
-    const [wishlists, setWishlists] = useState([]);
-    const [wishlisted, setWishlisted] = useState([]);
-
     const [checkIn, setCheckIn] = useState("");
     const [checkOut, setCheckOut] = useState("");
 
     const today = new Date().toISOString().split("T")[0];
 
-    async function getWishlists() {
-        try{
-            const { wishlists } = await wishlistService.getWishlist();
-            const allApartmentIds = [];
-
-            // Loop through the list and append the apartment key-value to an array
-            // wishlists.forEach(wishlist => {
-            //     if (Array.isArray(wishlist.apartments) && wishlist.apartments.length) {
-            //         wishlist.apartments.forEach(apartment => {
-            //             allApartmentIds.push(apartment.id);
-            //         });
-            //     }
-            // });
-
-            setWishlisted(allApartmentIds);
-            setWishlists(wishlists);
-        }catch(error){
-            console.log(error)
-            toast.error(error?.response?.data?.message || "Something went wrong")
-        }
-    }
-
-    const handleWishlist = async (id) => {
-        try{
-            const {status} = await wishlistService.addApartmentToWishlist(apartmentId, id);
-
-            if (status === 200) {
-                toast.success("Apartment added to wishlist");
-                await getWishlists();
-                setLike(false);
-            }
-        }catch(error){
-            toast.error(error?.response?.data?.message || "Something went wrong");
-        }
-
-    }
-
-    /* ---------------------------- DATA FETCHERS ---------------------------- */
+    /* ---------------------------- DATA FETCHERS ---------------------------- */
     const fetchApartment = useCallback(async () => {
         if (!apartmentId) return;
         try {
@@ -102,12 +61,11 @@ const ApartmentDetails = () => {
     const fetchWishlists = useCallback(async () => {
         try {
             const { wishlists } = await wishlistService.getWishlist();
-            console.log(wishlists)
             // /** Flatten every apartment.id inside every wishlist into a single array */
-            // const ids = wishlists?.flatMap((w) =>
-            //     Array.isArray(w.apartments) ? w.apartments.map((a) => a.id) : []
-            // );
-            // setWishlistIds(ids);
+            const ids = wishlists?.flatMap((w) =>
+                Array.isArray(w.apartments) ? w.apartments.map((a) => a.id) : []
+            );
+            setWishlistIds(ids);
         } catch (error) {
             console.error(error);
             toast.error(error?.response?.data?.message || "Something went wrong");
@@ -137,7 +95,6 @@ const ApartmentDetails = () => {
             );
         }
     }, [checkOut, checkIn]);
-
 
     /* React to Stripe checkout callbacks */
     useEffect(() => {
@@ -170,10 +127,8 @@ const ApartmentDetails = () => {
 
     const toggleWishlist = async () => {
         try {
-            const { status } = await wishlistService.addApartmentToWishlist(apartmentId);
-            console.log(status)
-            return
-            if (status === 200) {
+            const { status } = isWishlisted ? await wishlistService.deleteAnApartment(apartmentId) : await wishlistService.addApartmentToWishlist(apartmentId);
+            if (status === 201 || status === 200) {
                 toast.success(
                     isWishlisted ? "Apartment removed from wishlist" : "Apartment added to wishlist"
                 );
@@ -219,7 +174,7 @@ const ApartmentDetails = () => {
                 <>
                     <section className="mt-5">
                         {totalImages > 0 && (
-                            <div className="flex flex-col lg:flex-row gap-3 h-auto md:h-[400px]">
+                            <div className="flex flex-col lg:flex-row gap-3 h-full lg:h-[400px]">
                                 {/* Main Image */}
                                 <div className="w-full lg:w-1/2">
                                     <img
