@@ -3,7 +3,6 @@ import Sidebar from "./Sidebar.jsx";
 import authService from "../../services/authService.js";
 import { FaArrowLeft, FaPowerOff } from "react-icons/fa";
 
-
 function Layout() {
     const dayTime = () => {
         let date = new Date().getHours();

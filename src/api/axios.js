@@ -7,9 +7,9 @@ const instance = axios.create({
         "Content-Type": "application/json",
     },
     timeout: import.meta.env.VITE_AXIOS_TIMEOUT,
-    withCredentials: true
+    withCredentials: true,
+    validateStatus: () => true
 });
-
 
 instance.interceptors.request.use((config) => {
     const token = authService.getToken();
@@ -20,23 +20,25 @@ instance.interceptors.request.use((config) => {
 }, (error) => {
     return Promise.reject(error);
 })
+instance.interceptors.response.use(async (response) => {
+    const { status, config } = response;
 
-instance.interceptors.response.use((response) => response, async (error) => {
-    const response = error?.response;
-
-    if (response.status === 401 || response?.data.message === "Access denied. Token has expired"){
+    if (status === 401 || response?.data?.message === "Access denied. Token has expired") {
         const token = authService.getToken();
-        if(token){
+
+        if (token) {
             try {
-                await authService.refreshToken()
+                await authService.refreshToken();
+                return instance(config);
             } catch (error) {
-                authService.logout()
+                authService.logout();
                 window.location.reload();
             }
         }
-
     }
-    return Promise.reject(error);
-})
+
+    return response;
+});
+
 
 export default instance;

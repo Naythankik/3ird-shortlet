@@ -1,5 +1,4 @@
 import axios from '../api/axios';
-import authService from "./authService.js";
 
 class ApartmentService {
     async getApartments(url) {
@@ -7,10 +6,6 @@ class ApartmentService {
             const { data } = await axios.get(url);
             return data;
         }catch(err){
-            if(err.status === 401){
-                console.log(err)
-                return err
-            }
             throw new Error(err.message);
         }
     }
@@ -20,10 +15,6 @@ class ApartmentService {
             const { data } = await axios.get(`apartments/read/${id}`);
             return data;
         }catch(err){
-            if(err.status === 401){
-                authService.logout()
-                window.location.reload();
-            }
             throw new Error(err.message);
         }
     }
