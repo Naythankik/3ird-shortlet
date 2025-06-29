@@ -30,7 +30,7 @@ const Sidebar = () => {
 
     return (
         <aside className="min-w-24 md:w-64 h-screen relative">
-            <nav className="fixed left-0 bg-blue-500 p-4 text-white h-full z-50">
+            <nav className="fixed left-0 bg-blue-500 p-2 md:p-4 text-white h-full z-50">
                 <ul className="space-y-4">
                     {menus.map((menu, index) => (
                         <li key={index}>
@@ -42,7 +42,7 @@ const Sidebar = () => {
                                 }`}
                             >
                                 <span
-                                    className={`text-4xl md:text-base ${location.pathname === menu.path ? 'text-blue-700 md:text-white' : ''}`}>{menu?.icon}</span>
+                                    className={`text-2xl md:text-base ${location.pathname === menu.path ? 'text-blue-700 md:text-white' : ''}`}>{menu?.icon}</span>
                                 <span className="hidden md:inline-block">{menu.name}</span>
                             </Link>
                         </li>
