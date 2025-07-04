@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import bookingService from "../../../services/bookingService.js";
 import Spinner from "../../../components/Spinner.jsx";
 import NoDataComponent from "../../../components/helpers/NoDataComponent.jsx";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
 
 const Booking = () => {
@@ -57,21 +57,28 @@ const Booking = () => {
             bookings.map((booking, i) => (
             <article key={i} className="border-2 border-gray-300 p-3 rounded-xl grid md:grid-cols-[4fr_1fr] justify-between">
                 <div className="flex gap-5">
-                    <img src={booking?.apartment?.images[0]} alt={booking?.apartment?.name} className="rounded-xl w-[200px] h-[180px] object-cover" />
+                    <div className="relative">
+                        <div className="rounded-xl absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                        <img src={booking?.apartment?.images[0]} alt={booking?.apartment?.name} className="rounded-xl w-[200px] h-[180px] object-cover" />
+                    </div>
                     <div className="flex justify-between flex-col pt-4 w-full md:w-3/5">
                         <div className="flex flex-col gap-1">
                             <p className="font-semibold text-slate-700 text-lg">{booking?.apartment?.name}</p>
                             <p className="font-medium text-slate-700 text-base">{`${booking?.apartment?.address?.city}, ${booking?.apartment?.address?.country}`}</p>
                         </div>
-                        <div className="flex flex-row gap-5">
+                        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                             <button
                                 onClick={() => navigate(`/bookings/${booking.id}`, {state: {booking: booking}})}
-                                className="bg-blue-500 p-2 hover:opacity-90 text-white text-lg font-semibold rounded-lg w-fit md:w-2/5">View Details</button>
-                            {booking.bookingStatus === 'completed' ?
-                                <button className="bg-transparent border-2 border-gray-300 p-2 text-blue-600 text-lg font-semibold rounded-lg w-fit md:w-1/4">Rebook</button>
+                                className="bg-blue-500 p-2 hover:opacity-90 text-white text-lg font-semibold rounded-lg">View Details</button>
+                            {booking.bookingStatus === 'confirmed' ?
+                                <button className="bg-transparent border-2 border-gray-300 p-2 text-blue-600 text-lg font-semibold rounded-lg">Rebook</button>
                             :
                                 <>
-                                    <button className="bg-transparent border-2 border-gray-300 p-2 text-blue-600 text-lg font-semibold rounded-lg w-fit md:w-1/4">Cancel</button>
+                                    <Link
+                                        to={`/booking/${booking.apartment.id}/payment/${booking.id}`}
+                                        className="text-center bg-transparent border-2 border-gray-300 p-2 text-blue-600 text-lg font-semibold rounded-lg">
+                                        Complete Booking
+                                    </Link>
                                 </>
                             }
                         </div>

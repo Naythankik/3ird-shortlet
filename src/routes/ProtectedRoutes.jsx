@@ -6,6 +6,7 @@ import BookApartment from "../pages/protected/Bookings/BookApartment.jsx";
 import AuthGuard from "../components/guards/AuthGuard.jsx";
 import Booking from "../pages/protected/Bookings/Booking.jsx";
 import BookingDetails from "../pages/protected/Bookings/BookingDetails.jsx";
+import Payment from "../pages/protected/Bookings/Payment.jsx";
 
 const ProtectedRoutes =
     [
@@ -32,6 +33,10 @@ const ProtectedRoutes =
         {
             path: '/apartment/:apartmentId',
             element: <AuthGuard element={<ApartmentDetails />} isAuthRequired={true} />
+        },
+        {
+            path: '/booking/:apartmentId/payment/:bookingId',
+            element: <AuthGuard element={<Payment />} isAuthRequired={true} />
         },
         {
             path: '/apartment/:apartmentId/book/:name',

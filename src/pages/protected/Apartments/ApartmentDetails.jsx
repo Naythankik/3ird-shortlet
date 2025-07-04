@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import React, {useCallback, useEffect, useState} from "react";
 import apartmentService from "../../../services/apartmentService.js";
 import wishlistService from "../../../services/wishlistService.js";
@@ -11,17 +11,11 @@ import {BsChat} from "react-icons/bs";
 import FeatureDisplay from "../../../components/FeatureDisplay.jsx";
 import {HeartIcon} from "lucide-react";
 import ReviewList from "../ReviewList.jsx";
+import BookingCard from "../../../components/BookingCard.jsx";
 
 const ApartmentDetails = () => {
     /* ------------------------------- ROUTING ------------------------------- */
-    const navigate = useNavigate();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
     const { apartmentId } = useParams();
-    const [cautionFee, setCautionFee] = useState(0)
-    const [totalPrice, setTotalPrice] = useState(0)
-    const [price, setPrice] = useState(0)
-    const [nights, setNights] = useState(1)
 
     /* -------------------------------- STATE -------------------------------- */
     const [loading, setLoading] = useState(false);
@@ -30,25 +24,12 @@ const ApartmentDetails = () => {
     const [apartment, setApartment] = useState(null);
     const [wishlistIds, setWishlistIds] = useState([]);
 
-    const [checkIn, setCheckIn] = useState("");
-    const [checkOut, setCheckOut] = useState("");
-
-    const today = new Date().toISOString().split("T")[0];
-
     /* ---------------------------- DATA FETCHERS ---------------------------- */
     const fetchApartment = useCallback(async () => {
         if (!apartmentId) return;
         try {
             setLoading(true);
             const { apartment: data } = await apartmentService.getAnApartment(apartmentId);
-            setCautionFee(data.cautionFee)
-            setPrice(data.price)
-            setTotalPrice(
-                (Number(data.price) + Number(data.cautionFee)).toLocaleString("en-NG", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })
-            );
             setApartment(data);
         } catch (err) {
             console.error(err);
@@ -79,33 +60,8 @@ const ApartmentDetails = () => {
     }, [fetchApartment, fetchWishlists]);
 
     /* React to Checkin and Checkout dates */
-    useEffect(() => {
-        if (checkIn && checkOut) {
-            const inDate = new Date(checkIn);
-            const outDate = new Date(checkOut);
-            const diffInMs = outDate - inDate; // Difference in milliseconds
-            const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-            setNights(diffInDays);
-            setPrice(diffInDays * apartment.price);
-            setTotalPrice((Number(diffInDays * apartment.price) + Number(apartment.cautionFee)).
-                toLocaleString("en-NG", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })
-            );
-        }
-    }, [checkOut, checkIn]);
 
-    /* React to Stripe checkout callbacks */
-    useEffect(() => {
-        if (queryParams.has("success")) {
-            toast.success("Payment has been verified – check your email for details.");
-        }
-        if (queryParams.has("cancel")) {
-            toast.error("Payment was cancelled. Please try again.");
-            navigate(location.pathname, { replace: true });
-        }
-    }, [queryParams, navigate, location.pathname]);
+
 
     /* ------------------------- IMAGE NAVIGATION LOGIC ------------------------ */
     const totalImages = apartment?.images?.length || 0;
@@ -145,6 +101,7 @@ const ApartmentDetails = () => {
 
     return (
         <div className="relative pb-12">
+            <ToastContainer />
             {/* ------------------------------ Image Modal ----------------------------- */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
@@ -290,7 +247,7 @@ const ApartmentDetails = () => {
                                 </p>
                                 <p className="font-medium text-lg">
                                     Payment method:
-                                    <span className="text-gray-500"> Both Card and Bank Transfer. Refund processed within 24 hrs after checkout.</span>
+                                    <span className="text-gray-500"> Both Card and Bank Transfer. Refund processed within 24 hrs after checkout.</span>
                                 </p>
                             </section>
 
@@ -307,69 +264,7 @@ const ApartmentDetails = () => {
                         </div>
 
                         {/* ------------------------- Right – Booking Card ------------------------- */}
-                        <aside className="w-full md:w-1/4 border-2 rounded-lg p-4 bg-white sticky top-4 self-start">
-                            <p className="text-2xl font-bold">
-                                NGN {apartment.price.toLocaleString()} <span className="text-sm font-medium text-gray-500">per night</span>
-                            </p>
-
-                            <form className="mt-3 flex flex-col gap-4">
-                                <div className="border-2 rounded-lg overflow-hidden divide-y-2">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 divide-y-2 md:divide-x-2">
-                                        <div className="p-2">
-                                            <label className="block text-gray-400 mb-1">Check‑in</label>
-                                            <input
-                                                type="date"
-                                                value={checkIn}
-                                                min={today}
-                                                onChange={(e) => setCheckIn(e.target.value)}
-                                                className="w-full"
-                                            />
-                                        </div>
-                                        <div className="p-2">
-                                            <label className="block text-gray-400 mb-1">Check‑out</label>
-                                            <input
-                                                type="date"
-                                                value={checkOut}
-                                                min={checkIn || today}
-                                                onChange={(e) => setCheckOut(e.target.value)}
-                                                className="w-full"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="p-2">
-                                        <label className="block text-gray-500 mb-1">Guests</label>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            max={apartment.maxGuests}
-                                            defaultValue="1"
-                                            className="w-full border-2 border-gray-300 rounded-lg p-2"
-
-                                        />
-                                    </div>
-                                </div>
-
-                                <button type="button" className="w-full bg-blue-500 rounded-md p-3 text-white hover:bg-blue-600">
-                                    Reserve
-                                </button>
-                            </form>
-
-                            <p className="text-gray-400 my-4 text-sm text-justify">This listing is available for reservations up to 30 days in advance.</p>
-                            <div className="flex gap-2 flex-col">
-                                <div className="flex justify-between">
-                                    <p className="text-gray-500 text-lg md:text-xs">{`NGN ${apartment.price.toLocaleString()} X ${nights} night(s)`}</p>
-                                    <p className="text-lg md:text-xs">{`NGN ${price.toLocaleString()}`}</p>
-                                </div>
-                                <div className="flex justify-between">
-                                    <p className="text-gray-500 text-lg md:text-xs">Caution Fee</p>
-                                    <p className="text-lg md:text-xs">{`NGN ${cautionFee.toLocaleString()}`}</p>
-                                </div>
-                                <div className="flex justify-between border-t-2 pt-2 border-gray-200">
-                                    <p className="text-gray-500 text-xl md:text-base">Total Price</p>
-                                    <p className="text-xl md:text-sm font-bold">{`NGN ${totalPrice.toLocaleString()}`}</p>
-                                </div>
-                            </div>
-                        </aside>
+                        <BookingCard apartment={apartment}/>
                     </section>
 
                 </>

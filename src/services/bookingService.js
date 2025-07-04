@@ -3,12 +3,17 @@ import axios from '../api/axios';
 class BookingService {
     async createBooking(url, form) {
         try {
-            const { data } = await axios.post(url, form);
-            return { data };
-        } catch (err) {
-            return { error: err.response?.data || err };
+            const response = await axios.post(url, form);
+            return response.data;
+        } catch (error) {
+            return {
+                error: true,
+                message: error.response?.data?.message || error.message || "An unknown error occurred",
+                details: error.response?.data || null,
+            };
         }
     }
+
 
 
     async getBookings(url) {
