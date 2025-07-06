@@ -1,6 +1,7 @@
 const CardsComponent = ({ card, selectedCard, onCheck }) => {
     const Icon = card.icon;
     const checked = selectedCard === card.id;
+
     return (
         <label
             htmlFor={card.name}

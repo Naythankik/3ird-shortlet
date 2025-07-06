@@ -10,8 +10,7 @@ const Payment = () => {
     const navigate = useNavigate();
     const [selectedCard, setSelectedCard] = useState(null);
     const [booking, setBooking] = useState(null);
-    const { bookingId, apartmentId } = useParams();
-    const [discount, setDiscount] = useState();
+    const { bookingId } = useParams();
     const [loading, setLoading] = useState(false);
     const queryParams = new URLSearchParams(location.search);
 
@@ -67,6 +66,10 @@ const Payment = () => {
         }
         try{
             const response = await paymentService.createCheckoutSession(bookingId, payload)
+            if(response.status === 400){
+                toast.error(response.message);
+                return
+            }
             navigate(response.data.url)
         }catch (e){
             toast.error(e.message);
@@ -79,7 +82,8 @@ const Payment = () => {
     useEffect( () => {
         const booking = async () => {
             try{
-                const { booking } = await bookingService.getBooking(bookingId)
+                const { booking, status } = await bookingService.getBooking(bookingId)
+                if(status === 404) return navigate('/bookings')
                 setBooking(booking)
             }catch (e){
                 toast.error(e.message);
@@ -101,7 +105,7 @@ const Payment = () => {
     }, [queryParams, navigate, location.pathname]);
 
     useEffect(() => {
-        booking?.paymentStatus === 'pending' && toast.info('Payment is pending. Please wait for confirmation.')
+        booking?.paymentStatus === 'processed' && toast.info('Payment is processing. Please wait for confirmation.')
     }, [booking])
 
     return (
@@ -213,18 +217,19 @@ const Payment = () => {
                         <div className="grid grid-cols-1 gap-1 text-sm">
                             <div className="flex justify-between items-center">
                                 <p className="text-gray-600">
-                                    {`$30 X ${getDateDifference(booking?.checkInDate, booking?.checkOutDate)} night`}
+                                    {`$ ${booking?.apartment?.price.toLocaleString()} X ${getDateDifference(booking?.checkInDate, booking?.checkOutDate)} night`}
                                 </p>
-                                <p className="text-gray-600 font-semibold">{`$ ${booking?.totalPrice.toLocaleString()}`}</p>
+                                <p className="text-gray-600 font-semibold">{`$ ${(booking?.apartment?.price * getDateDifference(booking?.checkInDate, booking?.checkOutDate)).toLocaleString()}`}</p>
                             </div>
                             <div className="flex justify-between items-center">
                                 <p className="text-gray-600">Caution Fee</p>
                                 <p className="text-gray-600 font-semibold">{`$ ${booking?.apartment?.cautionFee.toLocaleString()}`}</p>
                             </div>
-                            <div className="flex justify-between items-center mt-3 pt-2 border-t-2 border-gray-200">
+                            <p className="text-xs text-gray-400 mt-5">NB: In some cases, discount available for the selected date has been added to the purchase price.</p>
+                            <div className="flex justify-between items-center pt-2 border-t-2 border-gray-200">
                                 <p className="text-gray-600">Total</p>
                                 <p className="text-gray-600 font-bold text-lg">{`$ 
-                                ${(Number(booking?.apartment?.cautionFee) + Number(booking?.totalPrice)).toLocaleString()}`}
+                                ${booking?.totalPrice.toLocaleString()}`}
                                 </p>
                             </div>
 
@@ -232,10 +237,10 @@ const Payment = () => {
                     </div>
                     <button
                         type="submit"
-                        disabled={!loading || booking?.bookingStatus === 'confirmed'}
+                        disabled={loading || booking?.bookingStatus === 'confirmed'}
                         className={`bg-blue-500 text-white rounded-md p-3 flex justify-center items-center gap-5`}
                     >{`Confirm & pay $
-                    ${(Number(booking?.apartment?.cautionFee) + Number(booking?.apartment?.price)).toLocaleString()}`}
+                    ${booking?.totalPrice.toLocaleString()}`}
                         { loading && <div className="w-4 h-4 rounded-full border-r-2 border-l-2 animate-spin"></div>}
                     </button>
                 </div>
