@@ -70,7 +70,7 @@ const Payment = () => {
                 toast.error(response.message);
                 return
             }
-            navigate(response.data.url)
+            window.location.href = response.data.url
         }catch (e){
             toast.error(e.message);
             return

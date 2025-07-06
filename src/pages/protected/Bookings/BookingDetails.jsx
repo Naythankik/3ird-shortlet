@@ -94,13 +94,17 @@ const BookingDetails = () => {
     return (
         <div className="max-w-5xl mx-auto px-2 md:px-6 py-3 md:py-10 text-blue-500">
             <ToastContainer />
-            <h1 className="text-lg md:text-3xl font-bold mb-4">Booking Details</h1>
 
             {/* Apartment Images */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                {booking?.apartment?.images.map((img, index) => (
-                    <img key={index} src={img} alt={`Apartment Image ${index + 1}`} className="rounded-lg h-48 object-cover w-full" />
+                {booking?.apartment?.images.filter((_, i) => {
+                    return i < 5
+                }).map((img, ind) => (
+                    <img key={ind} src={img} alt={`Apartment Image ${ind + 1}`} className="rounded-lg h-48 object-cover w-full" />
                 ))}
+                <div className="h-48 rounded-lg bg-gray-300 flex justify-center items-center">
+                    <p className="text-gray-700">See more</p>
+                </div>
             </div>
 
             {/* Apartment Info */}
