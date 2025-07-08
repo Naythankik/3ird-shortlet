@@ -19,7 +19,8 @@ const Dashboard = () => {
     const [activeCategory, setActiveCategory] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Categories definition
+    // Categories definition    "email": "Werner_Huel28@yahoo.com",
+
     const categories = [
         {
             id: 'featured',
@@ -137,7 +138,7 @@ const Dashboard = () => {
             </section>
 
             {/*Luxury listings*/}
-            { apartments?.luxuryListing &&
+            { apartments?.luxuryListing.length &&
                 <section id="listings" className="w-full my-5 text-blue-500">
                     <div className="flex justify-between flex-wrap items-center mb-2">
                         <h2 className="text-lg md:text-2xl font-bold text-blue-500">Luxury Listings</h2>
@@ -150,7 +151,7 @@ const Dashboard = () => {
                 </section>
             }
             {/*popular listings*/}
-            {apartments?.popularListings &&
+            {apartments?.popularListings.length &&
             <section className="w-full my-5 text-blue-500">
                 <div className="flex justify-between flex-wrap items-center mb-2">
                     <h2 className="text-lg md:text-2xl font-bold text-blue-500">Popular Listings</h2>
@@ -166,14 +167,14 @@ const Dashboard = () => {
 
             {/*Special offers*/}
             {
-                apartments.specialOffers &&
+                apartments?.specialOffers.length  &&
                 <section className="w-full my-5 text-blue-500">
                     <div className="flex justify-between flex-wrap items-center mb-2">
                         <h2 className="text-lg md:text-2xl font-bold text-blue-500">Special Offer</h2>
                         <Link to='#' className="hover:underline">View more</Link>
                     </div>
                     <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                        {apartments.specialOffers.map((specialOffer, index) => (
+                        {apartments?.specialOffers.map((specialOffer, index) => (
                             <ApartmentCard key={index} props={specialOffer} />))
                         }
                     </div>
