@@ -30,7 +30,7 @@ const Sidebar = () => {
 
 
     return (
-        <aside className="min-w-24 md:w-64 h-screen relative">
+        <aside className="min-w-20 md:w-64 h-screen relative">
             <nav className="fixed left-0 bg-blue-500 p-2 md:p-4 text-white h-full">
                 <ul className="space-y-4">
                     {menus.map((menu, index) => (
