@@ -42,6 +42,7 @@ class AuthService {
 
             this.setToken(token);
             this.saveFullName(profile.firstName, profile.lastName)
+            this.saveUserId(profile.id)
 
             return true;
         } catch (error) {
@@ -129,8 +130,16 @@ class AuthService {
         return localStorage.getItem('fullName');
     }
 
+    getUserId() {
+        return localStorage.getItem('userId');
+    }
+
     isAuthenticated() {
         return !!this.getToken();
+    }
+
+    saveUserId(id) {
+        localStorage.setItem('userId', id);
     }
 }
 

@@ -6,6 +6,7 @@ import NoMatch from "./components/NoMatch.jsx";
 import ProtectedRoutes from "./routes/ProtectedRoutes.jsx";
 import AuthRoutes from "./routes/AuthRoutes.jsx";
 import AdminRoutes from "./routes/AdminRoutes.jsx";
+import {SocketProvider} from "./context/SocketProvider.jsx";
 
 const routes = createBrowserRouter([
     {
@@ -28,7 +29,9 @@ const routes = createBrowserRouter([
 );
 
 const App = () => {
-    return <RouterProvider router={ routes } />
+    return <SocketProvider>
+        <RouterProvider router={ routes } />
+    </SocketProvider>
 }
 
 export default App;

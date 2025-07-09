@@ -1,76 +1,133 @@
-import io from 'socket.io-client'
 import {useEffect, useState} from "react";
 import {FaMagnifyingGlass} from "react-icons/fa6";
 import {HiOutlinePaperAirplane} from "react-icons/hi";
 import {FaRegCommentDots} from "react-icons/fa";
-const socket = io(import.meta.env.VITE_CHAT_SOCKET_URL)
+import {useSocket} from "../../context/SocketProvider.jsx";
+import {joinChat, sendMessage} from "../../api/socket.js";
+import {toast, ToastContainer} from "react-toastify";
+import messageService from "../../services/messageService.js";
+import authService from "../../services/authService.js";
 
 const Message = () => {
+    const socket = useSocket();
+    const userId = authService.getUserId()
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([])
+    const [chats, setChats] = useState([])
     const [viewConversation, setViewConversation] = useState(null)
-    const conversations = [
-        { sender: 1, receiver: 2, time: '10:00 AM', message: 'Hi! I’m interested in your 2‑bedroom apartment in Lekki for this weekend.' },
-        { sender: 2, receiver: 1, time: '10:01 AM', message: 'Hello! It’s available from Friday 2 PM to Sunday noon.' },
-        { sender: 1, receiver: 2, time: '10:02 AM', message: 'Great. What’s the total for two nights?' },
-        { sender: 2, receiver: 1, time: '10:03 AM', message: 'That would be ₦60,000; cleaning and service fees are included.' },
-        { sender: 1, receiver: 2, time: '10:04 AM', message: 'Perfect. Could you send a photo of the kitchen, please?' },
-        { sender: 2, receiver: 1, time: '10:05 AM', message: 'Sure—just uploaded three new photos to the listing.' },
-        { sender: 1, receiver: 2, time: '10:06 AM', message: 'Looks good! I’ll go ahead and book now.' },
-        { sender: 1, receiver: 2, time: '10:06 AM', message: 'Thanks! See you Friday.' },
-        { sender: 2, receiver: 1, time: '10:06 AM', message: 'Booking received and confirmed. Looking forward to hosting you!' },
 
-        // 9
-        { sender: 2, receiver: 1, time: '10:09 AM', message: 'Quick note: check‑in is self‑service with a smart lock.' },
-        { sender: 1, receiver: 2, time: '10:10 AM', message: 'Great—please share the code when ready.' },
-        { sender: 2, receiver: 1, time: '10:11 AM', message: 'Will do. Do you have any dietary restrictions? We provide a welcome snack.' },
-        { sender: 1, receiver: 2, time: '10:12 AM', message: 'No restrictions. A bottle of water would be perfect, though.' },
-        { sender: 2, receiver: 1, time: '10:13 AM', message: 'Noted. Would you like airport pickup? It’s ₦8,000 extra.' },
-        { sender: 1, receiver: 2, time: '10:14 AM', message: 'Yes, that would be helpful—arrival is 1 PM Friday.' },
-        { sender: 2, receiver: 1, time: '10:15 AM', message: 'All set. Driver’s name is Musa; he’ll text you Thursday.' },
-        { sender: 1, receiver: 2, time: '10:16 AM', message: 'Awesome. How do I pay for the pickup?' },
-        { sender: 2, receiver: 1, time: '10:17 AM', message: 'You can pay cash to Musa or add it to your card on file—your choice.' },
+    const formattedDate = (value) => {
+        const d = new Date(value);
 
-        // 18
-        { sender: 1, receiver: 2, time: '10:18 AM', message: 'I’ll add it to my card now—please send the invoice.' },
-        { sender: 2, receiver: 1, time: '10:19 AM', message: 'Invoice sent. Let me know once paid.' },
-        { sender: 1, receiver: 2, time: '10:21 AM', message: 'Paid! Transaction ID ends in 8421.' },
-        { sender: 2, receiver: 1, time: '10:22 AM', message: 'Payment received—thank you.' },
-        { sender: 1, receiver: 2, time: '10:23 AM', message: 'Could you confirm Wi‑Fi speed? I’ll need to work Saturday morning.' },
-        { sender: 2, receiver: 1, time: '10:24 AM', message: 'Sure. Last speed test was 120 Mbps down / 35 Mbps up.' },
-        { sender: 1, receiver: 2, time: '10:25 AM', message: 'Perfect—that’s plenty.' },
-        { sender: 2, receiver: 1, time: '10:26 AM', message: 'House rule reminder: no parties, quiet hours after 10 PM.' },
-        { sender: 1, receiver: 2, time: '10:27 AM', message: 'Understood. It’ll just be me and my colleague.' },
+        const hours = d.getHours();
+        const minutes = d.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
 
-        // 27
-        { sender: 2, receiver: 1, time: '10:28 AM', message: 'Great. I’ll send the door code Thursday morning.' },
-        { sender: 1, receiver: 2, time: '10:29 AM', message: 'Thanks again for the quick responses.' },
-        { sender: 2, receiver: 1, time: '10:30 AM', message: 'Happy to help—safe travels and see you soon!' }
-    ];
+        const formattedHour = hours % 12 || 12;
 
+        return `${formattedHour}:${minutes} ${ampm}`;
+    };
 
-    const openConversation = (index) => {
-        setViewConversation(index)
-        setMessages(conversations)
+    const fetchChats = async () => {
+        try{
+            const { chats } = await messageService.getChats();
+            setChats(chats)
+        }catch (e){
+            toast.error(e.message)
+        }
     }
 
-    const handleMessage = (e) => {
-        e.preventDefault()
-        console.log(e)
-        return
-        socket.emit('send_message', { message })
-    }
+    const fetchMessages = async () => {
+        if(viewConversation !== null){
+            try {
+                const { messages } = await messageService.getMessages(viewConversation);
+                console.log(messages)
+                setMessages(messages);
+            } catch (err) {
+                console.error('Error loading messages:', err);
+            }
+        }
+    };
+
+    const openConversation = (chatId) => {
+        setViewConversation(chatId);
+        setMessage('')
+    };
+
+    const handleMessage = async (e) => {
+        e.preventDefault();
+        if (!message.trim()) return;
+
+        /* CASE A: No chat yet – create one via REST, then join its room */
+        // if (!viewConversation) {
+        //     try {
+        //         // assuming chats contain participants and you have selected "receiverId"
+        //         const receiverId = selectedReceiverId; // <-- you'll need to set this
+        //         const { chat, msg } = await messageService.createChat({
+        //             receiverId,
+        //             text: message,
+        //         });
+        //
+        //         // append new chat to sidebar and open it
+        //         setChats((prev) => [chat, ...prev]);
+        //         setViewConversation(chat._id);
+        //         setMessages([msg]);      // show first message
+        //
+        //         joinChat(chat._id);      // join the newly created room
+        //         setMessage('');
+        //     } catch (err) {
+        //         toast.error(err.response?.data?.error || 'Could not create chat');
+        //     }
+        //     return;
+        // }
+
+        /* CASE B: Chat already exists – send via Socket.IO */
+        sendMessage(viewConversation, message, (ack) => {
+            if (ack?.status === 'ok') {
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        _id: ack.msgId,
+                        chatId: viewConversation,
+                        sender: userId,
+                        text: message,
+                        createdAt: new Date().toISOString(),
+                    },
+                ]);
+                setMessage('');
+            } else {
+                toast.error(ack?.msg || 'Message failed');
+            }
+        });
+    };
 
     useEffect(() => {
-        socket.on('receive_message', (msg) => {
-            setMessages(prev => [...prev, msg])
-        })
-        return () => socket.disconnect()
-    }, [socket])
+        fetchChats()
+        fetchMessages()
+        if (!viewConversation) return;
+
+        joinChat(viewConversation);
+
+        const handleNewMessage = (msg) => {
+            if (msg.chat?.id === viewConversation) {
+                setMessages((prev) => {
+                    return [...prev, msg];
+                });
+                setMessage('');
+            }
+        };
+
+        socket.on('message:new', handleNewMessage);
+
+        return () => {
+            socket.off('message:new', handleNewMessage);
+        };
+    }, [viewConversation, socket]);
 
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-[2fr_5fr] md:gap-3 items-start bg-white">
+        <>
+            <div className="grid grid-cols-1 md:grid-cols-[2fr_5fr] md:gap-3 items-start bg-white">
             <div
                 className={`${viewConversation !== null ? 'hidden' : 'grid'} md:sticky md:top-4 md:grid rounded-md rounded-r-none overflow-y-scroll content-start h-[96vh] md:border-r border-gray-500`}
                 style={{ scrollbarWidth: 'none'}}
@@ -89,29 +146,30 @@ const Message = () => {
                     </div>
                 </form>
                 {/*<!-------- chat messages ----------------!>*/}
+
                 <section className="flex flex-col w-full">
-                    {[...Array(15)].map((_, index) =>
-                        <article
-                            onClick={() => {openConversation(index)}}
-                            key={index}
-                            className={`cursor-pointer hover:bg-gray-200 hover:rounded-md ${viewConversation === index && 'bg-gray-300 rounded-xl'} py-4 px-2 flex flex-row items-center gap-3 border-gray-200 border-b`}
-                        >
-                            <img src="https://i.pravatar.cc/100?img=1" alt="avatar" className="w-6 h-6 md:w-11 md:h-11 rounded-full" />
-                            <div className="w-full">
-                                <div className="flex flex-row justify-between items-center">
-                                    <h4 className="text-sm">Nathaniel Abolarin</h4>
-                                    <span className="text-[9px] text-gray-400">23:35 AM</span>
+                    {chats?.map((c, id) =>
+                        c.participants.filter(cha => cha.id !== userId).map((chat, index) =>
+                            <article
+                                onClick={() => {openConversation(c.id)}}
+                                key={id}
+                                className={`cursor-pointer hover:bg-gray-200 hover:rounded-md ${viewConversation === c.id && 'bg-gray-300 rounded-xl'} py-4 px-2 flex flex-row items-center gap-3 border-gray-200 border-b`}
+                            >
+                                <img src={chat.profilePicture} alt={`avatar-${chat.firstName}`} className="w-6 h-6 md:w-11 md:h-11 rounded-full" />
+                                <div className="w-full">
+                                    <div className="flex flex-row justify-between items-center">
+                                        <h4 className="text-sm">{`${chat.firstName} ${chat.lastName}`}</h4>
+                                        <span className="text-[9px] text-gray-400">{formattedDate(c.lastMessage.updatedAt)}</span>
+                                    </div>
+                                    <div className="flex flex-row justify-between items-center">
+                                        <span className="text-[11px] text-gray-400 truncate">
+                                            { c.lastMessage.text.slice(0,30) }
+                                        </span>
+                                        <span className="text-[13px] text-white flex justify-center items-center p-2 bg-blue-400 h-5 w-5 rounded-full">{index}</span>
+                                    </div>
                                 </div>
-                                <div className="flex flex-row justify-between items-center">
-                                    <span className="text-[11px] text-gray-400 truncate">
-                                        {/*<!----------Text maximum length is 27 -----------------!>*/}
-                                        Lorem ipsum is a dummy or
-                                    </span>
-                                    <span className="text-[13px] text-white flex justify-center items-center p-2 bg-blue-400 h-5 w-5 rounded-full">{index}</span>
-                                </div>
-                            </div>
-                        </article>
-                    )}
+                            </article>
+                        ))}
                 </section>
             </div>
 
@@ -124,16 +182,17 @@ const Message = () => {
                             onSubmit={handleMessage}
                             className="flex gap-3 sticky bottom-0 bg-white py-3"
                         >
-                    <textarea
-                        rows="1"
-                        onInput={(e) => {
-                            e.target.style.height = 'auto';
-                            e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px`; // ~5 rows
-                        }}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="overflow-hidden text-gray-600 resize-none border w-full border-gray-300 rounded-xl p-2 focus:outline-none focus:border-blue-300 focus:border-2"
-                        placeholder="Say something"
-                    />
+                            <textarea
+                                rows="1"
+                                onInput={(e) => {
+                                    e.target.style.height = 'auto';
+                                    e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px`;
+                                }}
+                                onChange={(e) => setMessage(e.target.value)}
+                                value={message}
+                                className="overflow-hidden text-gray-600 resize-none border w-full border-gray-300 rounded-xl p-2 focus:outline-none focus:border-blue-300 focus:border-2"
+                                placeholder="Say something"
+                            />
 
                             <button
                                 disabled={!message.length}
@@ -147,18 +206,18 @@ const Message = () => {
                             {messages.map((conversation, index) =>(
                                 <div key={index}>
                                     <p className="hidden text-center text-xs text-gray-300">1 new message</p>
-                                    <div className={`w-full flex ${conversation.sender === 1 ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`w-full flex ${conversation.sender.id === userId ? 'justify-end' : 'justify-start'}`}>
                                         <div className={`max-w-lg w-fit flex gap-1 
-                                ${conversation.sender === 1 ? 'flex-row' : 'flex-row-reverse'}
-                                `}>
-                                            <span className="text-gray-400 text-nowrap text-[10px] content-center">{conversation.time}</span>
+                                        ${conversation.sender.id === userId ? 'flex-row' : 'flex-row-reverse'}
+                                        `}>
+                                            <span className="text-gray-400 text-nowrap text-[10px] content-center">{formattedDate(conversation.createdAt)}</span>
                                             <p
                                                 className={`p-2 rounded-xl text-gray-800 text-base 
-                                        ${conversation.sender === 1 ? 'bg-blue-100 rounded-br-none' : 'bg-blue-300 rounded-bl-none'}`}>
-                                                {conversation.message}
+                                                ${conversation.sender.id === userId ? 'bg-blue-100 rounded-br-none' : 'bg-blue-300 rounded-bl-none'}`}>
+                                                {conversation.text}
                                             </p>
                                             <div className="content-end">
-                                                <img src="https://i.pravatar.cc/100?img=1" alt="avatar" className="min-w-6 h-6 rounded-full" />
+                                                <img src={conversation?.sender?.profilePicture} alt="avatar" className="min-w-6 h-6 rounded-full" />
                                             </div>
                                         </div>
                                     </div>
@@ -184,6 +243,8 @@ const Message = () => {
             </div>
 
         </div>
+            <ToastContainer />
+        </>
     );
 }
 
