@@ -91,7 +91,7 @@ const Payment = () => {
         }
         booking()
 
-    }, []);
+    });
 
     /* React to Stripe checkout callbacks */
     useEffect(() => {
@@ -102,7 +102,7 @@ const Payment = () => {
             toast.error("Payment was cancelled. Please try again.");
             navigate(location.pathname, { replace: true });
         }
-    }, [queryParams, navigate, location.pathname]);
+    }, [queryParams, navigate]);
 
     useEffect(() => {
         booking?.paymentStatus === 'processed' && toast.info('Payment is processing. Please wait for confirmation.')

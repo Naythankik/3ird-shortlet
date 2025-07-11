@@ -50,7 +50,7 @@ const BookingCard = ({apartment}) => {
                 maximumFractionDigits: 2
             })
         );
-    }, [])
+    })
 
     useEffect(() => {
         if (checkIn && checkOut) {
@@ -67,7 +67,7 @@ const BookingCard = ({apartment}) => {
                 })
             );
         }
-    }, [checkOut, checkIn]);
+    }, [checkOut, checkIn, cautionFee, price]);
 
     if(isLoading) return <Spinner />
 

@@ -3,32 +3,28 @@ import AuthService from "../../services/authService.js";
 import { Navigate } from "react-router-dom";
 
 const AuthGuard = ({ element, isAuthRequired }) => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [isAuth, setIsAuth] = useState(false);
+    const [isAuth, setIsAuth] = useState(null);
 
     useEffect(() => {
         const checkAuth = () => {
             const authenticated = AuthService.isAuthenticated();
-            setIsAuth(authenticated);
-            setIsLoading(false);
+            setIsAuth(!!authenticated);
         };
 
         checkAuth();
     }, []);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    if (isAuth === null) {
+        return null;
     }
 
     if (isAuth && !isAuthRequired) {
         return <Navigate to='/dashboard' replace />;
-    }
-
-    if (!isAuth && isAuthRequired) {
+    }else if (!isAuth && isAuthRequired) {
         return <Navigate to='/login' replace />;
+    }else{
+        return element;
     }
-
-    return element;
 };
 
 export default AuthGuard;

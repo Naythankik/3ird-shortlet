@@ -31,6 +31,7 @@ instance.interceptors.response.use(async (response) => {
                 await authService.refreshToken();
                 return instance(config);
             } catch (error) {
+                console.log(error)
                 authService.logout();
                 window.location.reload();
             }

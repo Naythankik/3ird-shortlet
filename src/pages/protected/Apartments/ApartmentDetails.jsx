@@ -132,7 +132,7 @@ const ApartmentDetails = () => {
                     <section className="mt-5">
                         {totalImages > 0 && (
                             <div className="flex flex-col lg:flex-row gap-3 h-full lg:h-[400px]">
-                                {/* Main Image */}
+                                {/* Main Image */}
                                 <div className="w-full lg:w-1/2">
                                     <img
                                         key="0"
