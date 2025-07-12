@@ -46,6 +46,10 @@ const Message = () => {
         sendMessage(viewConversation, message);
     };
 
+    const goBackChats = () => {
+        setViewConversation(null)
+    }
+
     useEffect(() => {
         fetchChats()
         fetchMessages()
@@ -87,6 +91,7 @@ const Message = () => {
                     setMessage={setMessage}
                     message={message}
                     userId={userId}
+                    goBackChats={goBackChats}
                 />
             </div>
             <ToastContainer />

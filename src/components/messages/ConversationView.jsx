@@ -1,8 +1,8 @@
 import { FaRegCommentDots } from "react-icons/fa";
-import { HiOutlinePaperAirplane } from "react-icons/hi";
+import {HiArrowLeft, HiOutlinePaperAirplane} from "react-icons/hi";
 import MessageBubble from "./MessageBubble";
 
-const ConversationView = ({ messages, viewConversation, handleMessage, setMessage, message, userId }) => {
+const ConversationView = ({ messages, viewConversation, handleMessage, setMessage, message, userId, goBackChats }) => {
     if (!viewConversation) {
         return (
             <div className="h-full flex flex-col items-center justify-center text-center gap-4 px-6">
@@ -16,7 +16,7 @@ const ConversationView = ({ messages, viewConversation, handleMessage, setMessag
     return (
         <div
             style={{ scrollbarWidth: 'none'}}
-            className="bg-white rounded-md p-3 pb-0 flex flex-col-reverse gap-4 h-[96vh] overflow-y-scroll">
+            className="bg-white rounded-md p-3 pb-0 flex flex-col-reverse gap-4 h-[96vh] overflow-y-scroll relative">
             <form onSubmit={handleMessage} className="flex gap-3 sticky bottom-0 bg-white py-3">
                 <textarea
                     rows="1"
@@ -42,6 +42,21 @@ const ConversationView = ({ messages, viewConversation, handleMessage, setMessag
                         userId={userId}
                     />
                 ))}
+            </div>
+            <div className="flex md:hidden justify-between items-center absolute top-0 w-full py-3">
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={goBackChats}
+                        type="button">
+                        <HiArrowLeft />
+                    </button>
+                    <img src="https://i.pravatar.cc/150?img=1" alt="avatar" className="rounded-full w-10 h-10" />
+                    <div className="grid text-gray-600">
+                        <h2>The chat name</h2>
+                        <p>The chat description</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
