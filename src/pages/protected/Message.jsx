@@ -41,7 +41,6 @@ const Message = () => {
         if(viewConversation !== null){
             try {
                 const { messages } = await messageService.getMessages(viewConversation);
-                console.log(messages)
                 setMessages(messages);
             } catch (err) {
                 console.error('Error loading messages:', err);
@@ -57,48 +56,7 @@ const Message = () => {
     const handleMessage = async (e) => {
         e.preventDefault();
         if (!message.trim()) return;
-
-        /* CASE A: No chat yet – create one via REST, then join its room */
-        // if (!viewConversation) {
-        //     try {
-        //         // assuming chats contain participants and you have selected "receiverId"
-        //         const receiverId = selectedReceiverId; // <-- you'll need to set this
-        //         const { chat, msg } = await messageService.createChat({
-        //             receiverId,
-        //             text: message,
-        //         });
-        //
-        //         // append new chat to sidebar and open it
-        //         setChats((prev) => [chat, ...prev]);
-        //         setViewConversation(chat._id);
-        //         setMessages([msg]);      // show first message
-        //
-        //         joinChat(chat._id);      // join the newly created room
-        //         setMessage('');
-        //     } catch (err) {
-        //         toast.error(err.response?.data?.error || 'Could not create chat');
-        //     }
-        //     return;
-        // }
-
-        /* CASE B: Chat already exists – send via Socket.IO */
-        sendMessage(viewConversation, message, (ack) => {
-            if (ack?.status === 'ok') {
-                setMessages((prev) => [
-                    ...prev,
-                    {
-                        _id: ack.msgId,
-                        chatId: viewConversation,
-                        sender: userId,
-                        text: message,
-                        createdAt: new Date().toISOString(),
-                    },
-                ]);
-                setMessage('');
-            } else {
-                toast.error(ack?.msg || 'Message failed');
-            }
-        });
+        sendMessage(viewConversation, message);
     };
 
     useEffect(() => {
@@ -165,7 +123,8 @@ const Message = () => {
                                         <span className="text-[11px] text-gray-400 truncate">
                                             { c.lastMessage.text.slice(0,30) }
                                         </span>
-                                        <span className="text-[13px] text-white flex justify-center items-center p-2 bg-blue-400 h-5 w-5 rounded-full">{index}</span>
+                                        <span
+                                            className={`text-[13px] text-white ${chat.unreadMessages ? 'flex' : 'hidden'} justify-center items-center p-2 bg-blue-400 h-5 w-5 rounded-full`}>{chat.unreadMessages}</span>
                                     </div>
                                 </div>
                             </article>
@@ -211,11 +170,11 @@ const Message = () => {
                                         ${conversation.sender.id === userId ? 'flex-row' : 'flex-row-reverse'}
                                         `}>
                                             <span className="text-gray-400 text-nowrap text-[10px] content-center">{formattedDate(conversation.createdAt)}</span>
-                                            <p
-                                                className={`p-2 rounded-xl text-gray-800 text-base 
+                                            <pre
+                                                className={`p-2 rounded-xl font-normal text-gray-800 text-wrap text-base 
                                                 ${conversation.sender.id === userId ? 'bg-blue-100 rounded-br-none' : 'bg-blue-300 rounded-bl-none'}`}>
                                                 {conversation.text}
-                                            </p>
+                                            </pre>
                                             <div className="content-end">
                                                 <img src={conversation?.sender?.profilePicture} alt="avatar" className="min-w-6 h-6 rounded-full" />
                                             </div>

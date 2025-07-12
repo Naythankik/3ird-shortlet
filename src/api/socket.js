@@ -9,7 +9,7 @@ const socket = io(import.meta.env.VITE_CHAT_SOCKET_URL, {
 /** Call once, e.g., in a context/provider */
 export function connectSocket() {
     if (!socket.connected) {
-        socket.auth = { token: localStorage.getItem('token') };
+        socket.auth = { token: localStorage.getItem('token') ?? sessionStorage.getItem('token') };
         socket.connect();
     }
 }
@@ -21,9 +21,9 @@ export function joinChat(chatId) {
 }
 
 /** Helper: send a message */
-export function sendMessage(chatId, message, cb) {
+export function sendMessage(chatId, message) {
     connectSocket();
-    socket.emit('message:send', { chatId, message }, cb);
+    socket.emit('message:send', { chatId, message });
 }
 
 export default socket;
