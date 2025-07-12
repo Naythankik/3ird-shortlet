@@ -8,6 +8,7 @@ import Booking from "../pages/protected/Bookings/Booking.jsx";
 import BookingDetails from "../pages/protected/Bookings/BookingDetails.jsx";
 import Payment from "../pages/protected/Bookings/Payment.jsx";
 import Message from "../pages/protected/Message.jsx";
+import Notification from "../pages/protected/Notification.jsx";
 
 const ProtectedRoutes =
     [
@@ -46,6 +47,10 @@ const ProtectedRoutes =
         {
             path: 'message',
             element: <AuthGuard element={<Message />} isAuthRequired={true} />
+        },
+        {
+            path: 'notifications',
+            element: <AuthGuard element={<Notification />} isAuthRequired={true} />
         }
     ]
 export default ProtectedRoutes;
