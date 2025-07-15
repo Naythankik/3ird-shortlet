@@ -36,11 +36,12 @@ const ConversationView = ({ messages, viewConversation, handleMessage, setMessag
 
             <div className="flex flex-col gap-4">
                 {messages.map((conversation, index) => (
-                    <MessageBubble
-                        key={index}
-                        conversation={conversation}
-                        userId={userId}
-                    />
+                       <MessageBubble
+                           key={index}
+                           conversation={conversation}
+                           previousMessage={messages[index - 1]}
+                           userId={userId}
+                       />
                 ))}
             </div>
             <div className="flex md:hidden justify-between items-center absolute top-0 w-full py-3">

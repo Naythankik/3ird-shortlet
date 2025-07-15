@@ -183,7 +183,7 @@ const Dashboard = () => {
 
             {/*rare listings*/}
             {
-                apartments.rareListings &&
+                apartments?.rareListings &&
                 <section className="w-full my-5 text-blue-500">
                         <div className="flex justify-between flex-wrap items-center mb-2">
                             <h2 className="text-lg md:text-2xl font-bold text-blue-500">Rare Listings</h2>

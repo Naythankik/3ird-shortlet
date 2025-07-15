@@ -44,6 +44,7 @@ const Message = () => {
         e.preventDefault();
         if (!message.trim()) return;
         sendMessage(viewConversation, message);
+        fetchChats()
     };
 
     const goBackChats = () => {
@@ -72,7 +73,6 @@ const Message = () => {
             socket.off('message:new', handleNewMessage);
         };
     }, [viewConversation, socket]);
-
 
     return (
         <>
