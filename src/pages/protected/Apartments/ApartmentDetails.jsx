@@ -42,7 +42,6 @@ const ApartmentDetails = () => {
     const fetchWishlists = useCallback(async () => {
         try {
             const { wishlists } = await wishlistService.getWishlist();
-            // /** Flatten every apartment.id inside every wishlist into a single array */
             const ids = wishlists?.flatMap((w) =>
                 Array.isArray(w.apartments) ? w.apartments.map((a) => a.id) : []
             );
@@ -59,9 +58,9 @@ const ApartmentDetails = () => {
         fetchWishlists();
     }, [fetchApartment, fetchWishlists]);
 
-    /* React to Checkin and Checkout dates */
-
-
+    useEffect(() => {
+        document.title = `3ird Shortlet | ${apartment?.name}`;
+    })
 
     /* ------------------------- IMAGE NAVIGATION LOGIC ------------------------ */
     const totalImages = apartment?.images?.length || 0;

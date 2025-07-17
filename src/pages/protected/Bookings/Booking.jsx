@@ -25,6 +25,7 @@ const Booking = () => {
 
     useEffect(() => {
         getBookings();
+        document.title = '3ird Shortlet | Bookings';
     }, [])
 
     const statusTag = (value) => {

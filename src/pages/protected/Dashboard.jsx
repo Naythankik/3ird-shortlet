@@ -75,6 +75,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        document.title = '3ird Shortlet | Dashboard';
         fetchApartments();
     }, []);
 

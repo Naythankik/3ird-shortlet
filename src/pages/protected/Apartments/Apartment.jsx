@@ -46,6 +46,7 @@ const Apartment = () => {
     );
 
     useEffect(() => {
+        document.title = '3ird Shortlet | Apartments';
         const debouncedFetch = debounce(() => {
             fetchApartments(search, sortBy, pagination.currentPage);
         }, 500);

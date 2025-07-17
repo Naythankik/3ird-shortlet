@@ -5,7 +5,7 @@ const SocketContext = createContext(socket);
 
 export const SocketProvider = ({ children }) => {
     useEffect(() => {
-        connectSocket();                // connect once on mount
+        connectSocket();
         return () => socket.disconnect();
     }, []);
 

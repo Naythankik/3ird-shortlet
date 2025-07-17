@@ -74,6 +74,10 @@ const Message = () => {
         };
     }, [viewConversation, socket]);
 
+    useEffect(() => {
+        document.title = '3ird Shortlet | Message';
+    })
+
     return (
         <>
             <div className="grid grid-cols-1 md:grid-cols-[2fr_5fr] md:gap-3 items-start bg-white">

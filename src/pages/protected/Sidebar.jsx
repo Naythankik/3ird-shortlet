@@ -56,7 +56,6 @@ const Sidebar = () => {
                         <button
                             onClick={() => {
                                 authService.logout()
-                                window.location.reload()
                             }}
                             className="text-red-400 text-xl block md:flex items-center gap-1">
                             <FaPowerOff />

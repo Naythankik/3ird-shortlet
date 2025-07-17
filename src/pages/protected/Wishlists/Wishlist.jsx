@@ -20,6 +20,7 @@ export default function Wishlist() {
                 setLoading(false);
             }
         })();
+        document.title = '3ird Shortlet | Wishlists';
     }, []);
 
     if (loading) return <Spinner />;

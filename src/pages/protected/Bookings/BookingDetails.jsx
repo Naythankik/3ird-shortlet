@@ -89,6 +89,10 @@ const BookingDetails = () => {
         fetchBooking();
     }, [bookingId]);
 
+    useEffect(() => {
+        document.title = '3ird Shortlet | Booking Details';
+    });
+
     if (loading) return <Spinner />;
 
     return (

@@ -1,6 +1,11 @@
 import {HiCog, HiDotsVertical} from "react-icons/hi";
+import {useEffect} from "react";
 
 const Notification = () => {
+    useEffect(() => {
+        document.title = '3ird Shortlet | Notification';
+    })
+
     const notifications = [
         {
             id: 1,
