@@ -45,7 +45,7 @@ const Profile = () => {
            <div className="w-[98%] mx-auto grid grid-cols-1 md:grid-cols-[2fr_5fr] divide-y-2 md:divide-x-2 border bg-white items-start border-gray-400 rounded-md">
                <section className="py-3 px-4 grid gap-4 w-full">
                    <h2 className="text-lg font-bold mb-2">Account Management</h2>
-                   <img src="https://i.pravatar.cc/100?img=1" alt="profile" className="w-full h-64 rounded-md" />
+                   <img src={user?.profilePicture} alt="profile" className="w-full h-64 rounded-md" />
                    <div className="border rounded-lg p-4 w-full bg-blue-50">
                        <button className="border py-1 w-full rounded-lg bg-white">Upload Photo</button>
                    </div>
