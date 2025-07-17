@@ -28,28 +28,28 @@ class AuthService {
      * Returns false if the user is an admin.
      *
      * @param {{ email: string, password: string, rememberMe?: boolean }} user
-     * @returns {Promise<boolean>} True if login succeeds and user is not admin
+     * @returns {Promise<{success: boolean}>} True if login succeeds and user is not admin
      * @throws {{message: string, status?: number, data?: any}}
      */
     async login(user) {
         try {
-            const { data : {
-                access_token: token,
-                user: profile
-            } } = await axios.post('auth/login', user);
+            const { data, status } = await axios.post('auth/login', user);
 
-            // Check if the user is an admin, redirect them to the user page later
-            if(profile.role === 'admin') return false;
+            if(status !== 404) {
+                const { user: profile, access_token: token } = data;
+                // Check if the user is an admin, redirect them to the user page later
+                if(profile.role === 'admin') return false;
 
-            if (user.rememberMe) {
-                localStorage.setItem('rememberMe', 'true');
+                if (user.rememberMe) {
+                    localStorage.setItem('rememberMe', 'true');
+                }
+
+                this.setToken(token);
+                this.saveFullName(profile.firstName, profile.lastName)
+                this.saveUserId(profile.id)
+                return { success: true }
             }
-
-            this.setToken(token);
-            this.saveFullName(profile.firstName, profile.lastName)
-            this.saveUserId(profile.id)
-
-            return true;
+            return data;
         } catch (error) {
             throw this.handleApiError(error);
         }

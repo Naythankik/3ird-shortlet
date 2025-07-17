@@ -32,12 +32,13 @@ const LoginPage = () => {
         try{
             const response = await authService.login(user);
 
-            if(response){
-                return navigate('/dashboard');
-            }else{
-                setError('Login failed')
+            if(!response?.success){
+                setError(response.message)
+                return
             }
+            navigate('/dashboard');
         }catch(error){
+            console.log(error)
             setError(error.message || 'Login failed.');
         }finally {
             setIsLoading(false);
