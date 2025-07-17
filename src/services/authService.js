@@ -16,6 +16,7 @@ class AuthService {
             this.logout();
         }
 
+
         throw {
             message: errorMessage,
             status: error.response?.status,
@@ -35,11 +36,12 @@ class AuthService {
         try {
             const { data, status } = await axios.post('auth/login', user);
 
-            if(status !== 404) {
+            if(status === 200) {
                 const { user: profile, access_token: token } = data;
                 // Check if the user is an admin, redirect them to the user page later
-                if(profile.role === 'admin') return false;
-
+                if(profile.role === 'admin') {
+                    return { success: false, reason: 'admin' };
+                }
                 if (user.rememberMe) {
                     localStorage.setItem('rememberMe', 'true');
                 }
@@ -48,8 +50,9 @@ class AuthService {
                 this.saveFullName(profile.firstName, profile.lastName)
                 this.saveUserId(profile.id)
                 return { success: true }
+            }else{
+                return this.handleApiError({ response: { data, status }})
             }
-            return data;
         } catch (error) {
             throw this.handleApiError(error);
         }
@@ -132,7 +135,7 @@ class AuthService {
         try {
             return await axios.post('auth/password/forgot', user);
         } catch (error) {
-            throw error.response?.data || error;
+            throw this.handleApiError(error)
         }
     }
 
@@ -148,7 +151,7 @@ class AuthService {
         try {
            return await axios.post(`auth/password/reset/${token}`, body);
         } catch (error) {
-            throw error.response?.data || error;
+            throw this.handleApiError(error)
         }
     }
 
@@ -171,7 +174,8 @@ class AuthService {
      * Logs out the user and clears all stored session data.
      */
     logout() {
-        localStorage.clear() || sessionStorage.clear();
+        localStorage.clear();
+        sessionStorage.clear();
     }
 
     /**
